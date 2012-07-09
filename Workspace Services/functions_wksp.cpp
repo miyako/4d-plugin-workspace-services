@@ -291,6 +291,7 @@ void APPLICATION_Launch_paths(sLONG_PTR *pResult, PackagePtr pParams)
                 Param3.copyUTF16StringAtIndex(&u, i);
                 C_TEXT t;
                 t.setUTF16String(&u);
+                t.convertPathSystemToPOSIX();
                 NSString *s = t.copyUTF16String();
                 NSURL *url = [NSURL fileURLWithPath:s];
                 if(url) [urls addObject:url];
