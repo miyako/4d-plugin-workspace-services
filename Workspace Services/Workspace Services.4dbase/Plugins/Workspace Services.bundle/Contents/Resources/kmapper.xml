@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns="http://www.4d.com/namespace/reserved/FP/Constants">
+   <appid>&quot;0&quot;</appid>
+   <fourdversmin>&quot;9.0.0&quot;</fourdversmin>
+   <fourdversmax>&quot;9.0.0&quot;</fourdversmax>
+   <command name="FINDER Perform operation" str="20000" topic="1">
+      <param position="4" k="20003"/>
+   </command>
+   <command name="FINDER Get icon for file type" str="20000" topic="2">
+      <param position="2" k="20000"/>
+   </command>
+   <command name="APPLICATION Get path" str="20000" topic="3">
+      <param position="2" k="20001"/>
+   </command>
+   <command name="APPLICATION Launch" str="20000" topic="4">
+      <param position="2" k="20002"/>
+   </command>
+   <command name="APPLICATION Launch paths" str="20000" topic="5">
+      <param position="2" k="20002"/>
+   </command>
+   <command name="FILE Open with application" str="20000" topic="7">
+      <param position="3" k="20005"/>
+   </command>
+   <command name="FULL SCREEN BEGIN" str="20000" topic="15">
+      <param position="3" k="20004"/>
+   </command>
+   <command name="FOLDER GET CONTENTS" str="20000" topic="17">
+      <param position="3" k="20001"/>
+   </command>
+   <command name="FOLDER GET SUBPATHS" str="20000" topic="18">
+      <param position="3" k="20001"/>
+   </command>
+</application>

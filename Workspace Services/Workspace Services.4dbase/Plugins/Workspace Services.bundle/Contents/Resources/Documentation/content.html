@@ -1,0 +1,792 @@
+<html xmlns:date="http://exslt.org/dates-and-times">
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="./CSS/default.css">
+<title>Workspace Services</title>
+</head>
+<body>
+<h1>Workspace Services</h1>
+<p>
+<span class="title">Plugin Identifier: </span>20000</p>
+<p>
+<span class="title">Summary</span>
+</p>
+<ex4D:plugin-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for Workspace Services here -->
+<p>This plugin provides useful functions from the NSFileManager and NSWorkSpace classes on Mac OS X.</p>
+</ex4D:plugin-description>
+<a name="command:1"></a>
+<h2>Finder</h2>
+<a name="command:1,2"></a>
+<h3>FINDER Get icon for file type</h3>
+<p>
+<code>icon:=FINDER Get icon for file type (file; type)</code>
+</p>
+<p>
+<code>file (TEXT)</code>
+</p>
+<ex4D:argument argument-id="1" label="file" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (TEXT) here-->
+<p>The type of file.</p>
+</ex4D:argument>
+<p>
+<code>type (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="type" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+<p>The type of identification used in the previous argument.</p>
+</ex4D:argument>
+<p>You can use a <a href="#constant:1">File Type</a> constant for <code>type</code>.</p>
+<p>
+<code>icon</code> (PICTURE)<br>
+<ex4D:return-value label="icon" type="P" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (PICTURE) here-->
+<p>The icon image in TIFF format.</p>
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for FINDER Get icon for file type here -->
+<p>Get the icon image for a given file type.</p>
+<p>You can use the following constants as file type to get one of the standard Apple icons.</p>
+<ul>
+<li>kClipboardIcon = 'CLIP'</li>
+<li>kClippingUnknownTypeIcon = 'clpu'</li>
+<li>kClippingPictureTypeIcon = 'clpp'</li>
+<li>kClippingTextTypeIcon = 'clpt'</li>
+<li>kClippingSoundTypeIcon = 'clps'</li>
+<li>kDesktopIcon = 'desk'</li>
+<li>kFinderIcon = 'FNDR'</li>
+<li>kFontSuitcaseIcon = 'FFIL'</li>
+<li>kFullTrashIcon = 'ftrh'</li>
+<li>kGenericApplicationIcon = 'APPL'</li>
+<li>kGenericCDROMIcon = 'cddr'</li>
+<li>kGenericControlPanelIcon = 'APPC'</li>
+<li>kGenericControlStripModuleIcon = 'sdev'</li>
+<li>kGenericComponentIcon = 'thng'</li>
+<li>kGenericDeskAccessoryIcon = 'APPD'</li>
+<li>kGenericDocumentIcon = 'docu'</li>
+<li>kGenericEditionFileIcon = 'edtf'</li>
+<li>kGenericExtensionIcon = 'INIT'</li>
+<li>kGenericFileServerIcon = 'srvr'</li>
+<li>kGenericFontIcon = 'ffil'</li>
+<li>kGenericFontScalerIcon = 'sclr'</li>
+<li>kGenericFloppyIcon = 'flpy'</li>
+<li>kGenericHardDiskIcon = 'hdsk'</li>
+<li>kGenericIDiskIcon = 'idsk'</li>
+<li>kGenericRemovableMediaIcon = 'rmov'</li>
+<li>kGenericMoverObjectIcon = 'movr'</li>
+<li>kGenericPCCardIcon = 'pcmc'</li>
+<li>kGenericPreferencesIcon = 'pref'</li>
+<li>kGenericQueryDocumentIcon = 'qery'</li>
+<li>kGenericRAMDiskIcon = 'ramd'</li>
+<li>kGenericSharedLibaryIcon = 'shlb'</li>
+<li>kGenericStationeryIcon = 'sdoc'</li>
+<li>kGenericSuitcaseIcon = 'suit'</li>
+<li>kGenericURLIcon = 'gurl'</li>
+<li>kGenericWORMIcon = 'worm'</li>
+<li>kInternationalResourcesIcon = 'ifil'</li>
+<li>kKeyboardLayoutIcon = 'kfil'</li>
+<li>kSoundFileIcon = 'sfil'</li>
+<li>kSystemSuitcaseIcon = 'zsys'</li>
+<li>kTrashIcon = 'trsh'</li>
+<li>kTrueTypeFontIcon = 'tfil'</li>
+<li>kTrueTypeFlatFontIcon = 'sfnt'</li>
+<li>kTrueTypeMultiFlatFontIcon = 'ttcf'</li>
+<li>kUserIDiskIcon = 'udsk'</li>
+<li>kUnknownFSObjectIcon = 'unfs'</li>
+</ul>
+</ex4D:command-description>
+<a name="command:1,1"></a>
+<h3>FINDER Perform operation</h3>
+<p>
+<code>success:=FINDER Perform operation (source; destination; files; operation)</code>
+</p>
+<p>
+<code>source (TEXT)</code>
+</p>
+<ex4D:argument argument-id="1" label="source" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (TEXT) here-->
+<p>The full path of the source directory on which to perform the operation.</p>
+</ex4D:argument>
+<p>
+<code>destination (TEXT)</code>
+</p>
+<ex4D:argument argument-id="2" label="destination" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (TEXT) here-->
+<p>The full path of the destination directory on which to perform the operation.</p>
+</ex4D:argument>
+<p>
+<code>files (ARRAY)</code>
+</p>
+<ex4D:argument argument-id="3" label="files" type="Y" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (ARRAY) here-->
+<p>Array of file names in the source directory on which to perform the operation.</p>
+</ex4D:argument>
+<p>
+<code>operation (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="4" label="operation" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $4 (LONGINT) here-->
+<p>The type of operation to perform.</p>
+</ex4D:argument>
+<p>You can use a <a href="#constant:4">Finder Operation</a> constant for <code>operation</code>.</p>
+<p>
+<code>success</code> (LONGINT)<br>
+<ex4D:return-value label="success" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (LONGINT) here-->
+<p>1 on success.</p>
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for FINDER Perform operation here -->
+</ex4D:command-description>
+<a name="command:2"></a>
+<h2>Application</h2>
+<a name="command:2,3"></a>
+<h3>APPLICATION Get path</h3>
+<p>
+<code>path:=APPLICATION Get path (application; type)</code>
+</p>
+<p>
+<code>application (TEXT)</code>
+</p>
+<ex4D:argument argument-id="1" label="application" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (TEXT) here-->
+<p>The application name, with or without the .app extension. Alternatively the bundle identifier.</p>
+</ex4D:argument>
+<p>
+<code>type (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="type" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+<p>The format in which to receive the paths.</p>
+</ex4D:argument>
+<p>You can use a <a href="#constant:2">Path Style</a> constant for <code>type</code>.</p>
+<p>
+<code>path</code> (TEXT)<br>
+<ex4D:return-value label="path" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (TEXT) here-->
+<p>The full path of the application.</p>
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for APPLICATION Get path here -->
+<p>Get the full path of a named application.</p>
+</ex4D:command-description>
+<a name="command:2,4"></a>
+<h3>APPLICATION Launch</h3>
+<p>
+<code>success:=APPLICATION Launch (application; deactivate)</code>
+</p>
+<p>
+<code>application (TEXT)</code>
+</p>
+<ex4D:argument argument-id="1" label="application" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (TEXT) here-->
+<p>The application name, with or without the .app extension. Alternatively the bundle identifier.</p>
+</ex4D:argument>
+<p>
+<code>deactivate (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="deactivate" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+<p>Whether to deactivate the current application or keep active.</p>
+</ex4D:argument>
+<p>You can use a <a href="#constant:3">Launch Option</a> constant for <code>deactivate</code>.</p>
+<p>
+<code>success</code> (LONGINT)<br>
+<ex4D:return-value label="success" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (LONGINT) here-->
+<p>1, on success.</p>
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for APPLICATION Launch here -->
+<p>Launch a named application.</p>
+</ex4D:command-description>
+<a name="command:2,5"></a>
+<h3>APPLICATION Launch paths</h3>
+<p>
+<code>success:=APPLICATION Launch paths (application; action; files)</code>
+</p>
+<p>
+<code>application (TEXT)</code>
+</p>
+<ex4D:argument argument-id="1" label="application" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (TEXT) here-->
+<p>The application name, with or without the .app extension. Alternatively the bundle identifier.</p>
+</ex4D:argument>
+<p>
+<code>action (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="action" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+<p>Flags to specify the kind of action to perform on the documents.</p>
+</ex4D:argument>
+<p>You can use a <a href="#constant:3">Launch Option</a> constant for <code>action</code>.</p>
+<p>
+<code>files (ARRAY)</code>
+</p>
+<ex4D:argument argument-id="3" label="files" type="Y" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (ARRAY) here-->
+<p>Array of files paths.</p>
+</ex4D:argument>
+<p>
+<code>success</code> (LONGINT)<br>
+<ex4D:return-value label="success" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (LONGINT) here-->
+<p>1, on succes.</p>
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for APPLICATION Launch paths here -->
+<p>Launch an application and perform actions on an array of documents.</p>
+</ex4D:command-description>
+<a name="command:3"></a>
+<h2>File</h2>
+<a name="command:3,8"></a>
+<h3>FILE Get application name</h3>
+<p>
+<code>application:=FILE Get application name (file)</code>
+</p>
+<p>
+<code>file (TEXT)</code>
+</p>
+<ex4D:argument argument-id="1" label="file" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (TEXT) here-->
+<p>The full path to the file.</p>
+</ex4D:argument>
+<p>
+<code>application</code> (TEXT)<br>
+<ex4D:return-value label="application" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (TEXT) here-->
+<p>The name of the application.</p>
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for FILE Get application name here -->
+<p>Get the name of the default application assigned to the given file.</p>
+</ex4D:command-description>
+<a name="command:3,10"></a>
+<h3>FILE Get icon</h3>
+<p>
+<code>icon:=FILE Get icon (file)</code>
+</p>
+<p>
+<code>file (TEXT)</code>
+</p>
+<ex4D:argument argument-id="1" label="file" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (TEXT) here-->
+<p>The full path to the file or folder.</p>
+</ex4D:argument>
+<p>
+<code>icon</code> (PICTURE)<br>
+<ex4D:return-value label="icon" type="P" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (PICTURE) here-->
+<p>The icon image in TIFF format.</p>
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for FILE Get icon here -->
+<p>Get the custom icon of a given file or folder.</p>
+</ex4D:command-description>
+<a name="command:3,6"></a>
+<h3>FILE Get localized name</h3>
+<p>
+<code>name:=FILE Get localized name (file)</code>
+</p>
+<p>
+<code>file (TEXT)</code>
+</p>
+<ex4D:argument argument-id="1" label="file" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (TEXT) here-->
+<p>The full path to the file or folder.</p>
+</ex4D:argument>
+<p>
+<code>name</code> (TEXT)<br>
+<ex4D:return-value label="name" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (TEXT) here-->
+<p>The display name, or the original path name if undefined.</p>
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for FILE Get localized name here -->
+<p>Get the display name of a file system item.</p>
+</ex4D:command-description>
+<a name="command:3,7"></a>
+<h3>FILE Open with application</h3>
+<p>
+<code>success:=FILE Open with application (file; application; action)</code>
+</p>
+<p>
+<code>file (TEXT)</code>
+</p>
+<ex4D:argument argument-id="1" label="file" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (TEXT) here-->
+<p>The full path to the document to open.</p>
+</ex4D:argument>
+<p>
+<code>application (TEXT)</code>
+</p>
+<ex4D:argument argument-id="2" label="application" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (TEXT) here-->
+<p>The application name, with or without the .app extension. Alternatively, the bundle identifier.</p>
+</ex4D:argument>
+<p>
+<code>action (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="3" label="action" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (LONGINT) here-->
+<p>Flags to specify the kind of action to perform on the documents.</p>
+</ex4D:argument>
+<p>You can use a <a href="#constant:6">Open Option</a> constant for <code>action</code>.</p>
+<p>
+<code>success</code> (LONGINT)<br>
+<ex4D:return-value label="success" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (LONGINT) here-->
+<p>1, on success.</p>
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for FILE Open with application here -->
+<p>Open a file with the default application or the specified application.</p>
+</ex4D:command-description>
+<a name="command:3,9"></a>
+<h3>FILE SET ICON</h3>
+<p>
+<code>FILE SET ICON (file; icon)</code>
+</p>
+<p>
+<code>file (TEXT)</code>
+</p>
+<ex4D:argument argument-id="1" label="file" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (TEXT) here-->
+<p>The full path to the file or folder.</p>
+</ex4D:argument>
+<p>
+<code>icon (PICTURE)</code>
+</p>
+<ex4D:argument argument-id="2" label="icon" type="P" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (PICTURE) here-->
+<p>The icon image.</p>
+</ex4D:argument>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for FILE SET ICON here -->
+<p>Set the custom icon of a given file or folder.</p>
+</ex4D:command-description>
+<a name="command:4"></a>
+<h2>Dock</h2>
+<a name="command:4,13"></a>
+<h3>DOCK Get badge label</h3>
+<p>
+<code>label:=DOCK Get badge label</code>
+</p>
+<p>
+<code>label</code> (TEXT)<br>
+<ex4D:return-value label="label" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (TEXT) here-->
+<p>The label text.</p>
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for DOCK Get badge label here -->
+<p>Get the label on the application's dock icon.</p>
+</ex4D:command-description>
+<a name="command:4,12"></a>
+<h3>DOCK Get icon</h3>
+<p>
+<code>icon:=DOCK Get icon</code>
+</p>
+<p>
+<code>icon</code> (PICTURE)<br>
+<ex4D:return-value label="icon" type="P" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (PICTURE) here-->
+<p>The icon image in TIFF format.</p>
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for DOCK Get icon here -->
+<p>Get the dock icon of the application.</p>
+</ex4D:command-description>
+<a name="command:4,11"></a>
+<h3>DOCK SET BADGE LABEL</h3>
+<p>
+<code>DOCK SET BADGE LABEL (label)</code>
+</p>
+<p>
+<code>label (TEXT)</code>
+</p>
+<ex4D:argument argument-id="1" label="label" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (TEXT) here-->
+<p>The label text.</p>
+</ex4D:argument>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for DOCK SET BADGE LABEL here -->
+<p>Set the label on the application's dock icon.</p>
+</ex4D:command-description>
+<a name="command:4,14"></a>
+<h3>DOCK SET ICON</h3>
+<p>
+<code>DOCK SET ICON (icon)</code>
+</p>
+<p>
+<code>icon (PICTURE)</code>
+</p>
+<ex4D:argument argument-id="1" label="icon" type="P" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (PICTURE) here-->
+<p>The icon image.</p>
+</ex4D:argument>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for DOCK SET ICON here -->
+<p>Set the dock icon of the application.</p>
+</ex4D:command-description>
+<a name="command:5"></a>
+<h2>Full Screen (QuickTime)</h2>
+<a name="command:5,15"></a>
+<h3>FULL SCREEN BEGIN</h3>
+<p>
+<code>FULL SCREEN BEGIN (width; height; menu)</code>
+</p>
+<p>
+<code>width (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="width" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+<p>The new screen width or 0 to keeo the current resolution.</p>
+</ex4D:argument>
+<p>
+<code>height (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="height" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+<p>The new screen height or 0 to keeo the current resolution.</p>
+</ex4D:argument>
+<p>
+<code>menu (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="3" label="menu" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (LONGINT) here-->
+<p>Optionally how to manage the menu.</p>
+</ex4D:argument>
+<p>You can use a <a href="#constant:5">Full Screen Option</a> constant for <code>menu</code>.</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for FULL SCREEN BEGIN here -->
+<p>Start full screen mode using the deprecated QuickTime API. This is not the same as the OS X Lion feature.</p>
+</ex4D:command-description>
+<a name="command:5,16"></a>
+<h3>FULL SCREEN END</h3>
+<p>
+<code>FULL SCREEN END</code>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for FULL SCREEN END here -->
+<p>End full screen mode. Note that the plugin will automatically end full screen mode when the database is closed.</p>
+</ex4D:command-description>
+<a name="command:6"></a>
+<h2>Folder</h2>
+<a name="command:6,17"></a>
+<h3>FOLDER GET CONTENTS</h3>
+<p>
+<code>FOLDER GET CONTENTS (folder; paths; type)</code>
+</p>
+<p>
+<code>folder (TEXT)</code>
+</p>
+<ex4D:argument argument-id="1" label="folder" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (TEXT) here-->
+<p>The full path to the folder. May or may not have the terminator folder separator.</p>
+</ex4D:argument>
+<p>
+<code>paths (ARRAY)</code>
+</p>
+<ex4D:argument argument-id="2" label="paths" type="Y" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (ARRAY) here-->
+<p>Array of files paths in the specified folder.</p>
+</ex4D:argument>
+<p>
+<code>type (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="3" label="type" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (LONGINT) here-->
+<p>The format in which to receive the paths.</p>
+</ex4D:argument>
+<p>You can use a <a href="#constant:2">Path Style</a> constant for <code>type</code>.</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for FOLDER GET CONTENTS here -->
+<p>Get paths of files in a given directory at the primary level.</p>
+</ex4D:command-description>
+<a name="command:6,18"></a>
+<h3>FOLDER GET SUBPATHS</h3>
+<p>
+<code>FOLDER GET SUBPATHS (folder; paths; type)</code>
+</p>
+<p>
+<code>folder (TEXT)</code>
+</p>
+<ex4D:argument argument-id="1" label="folder" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (TEXT) here-->
+<p>The full path to the folder. May or may not have the terminator folder separator.</p>
+</ex4D:argument>
+<p>
+<code>paths (ARRAY)</code>
+</p>
+<ex4D:argument argument-id="2" label="paths" type="Y" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (ARRAY) here-->
+<p>Array of files paths in the specified folder.</p>
+</ex4D:argument>
+<p>
+<code>type (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="3" label="type" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (LONGINT) here-->
+<p>The format in which to receive the paths.</p>
+</ex4D:argument>
+<p>You can use a <a href="#constant:2">Path Style</a> constant for <code>type</code>.</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for FOLDER GET SUBPATHS here -->
+<p>Get paths of files in a given directory.</p>
+</ex4D:command-description>
+<a name="constant:1"></a>
+<h2>File Type</h2>
+<p>
+<code><a name="constant:1,4"></a>File OSType (0)</code>
+</p>
+<ex4D:constant constant-id="4" name="File OSType" type="L" value="0" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for File OSType (0) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:1,3"></a>File UTI (1)</code>
+</p>
+<ex4D:constant constant-id="3" name="File UTI" type="L" value="1" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for File UTI (1) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:1,2"></a>FIle Extension (2)</code>
+</p>
+<ex4D:constant constant-id="2" name="FIle Extension" type="L" value="2" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for FIle Extension (2) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:1,1"></a>File MIME Type (3)</code>
+</p>
+<ex4D:constant constant-id="1" name="File MIME Type" type="L" value="3" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for File MIME Type (3) here-->
+</ex4D:constant>
+<a name="constant:2"></a>
+<h2>Path Style</h2>
+<p>
+<code><a name="constant:2,1"></a>Path Style HFS (0)</code>
+</p>
+<ex4D:constant constant-id="1" name="Path Style HFS" type="L" value="0" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for Path Style HFS (0) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:2,2"></a>Path Style POSIX (1)</code>
+</p>
+<ex4D:constant constant-id="2" name="Path Style POSIX" type="L" value="1" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for Path Style POSIX (1) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:2,3"></a>Path Style URL (2)</code>
+</p>
+<ex4D:constant constant-id="3" name="Path Style URL" type="L" value="2" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for Path Style URL (2) here-->
+</ex4D:constant>
+<a name="constant:3"></a>
+<h2>Launch Option</h2>
+<p>
+<code><a name="constant:3,4"></a>Launch And Hide (1048576)</code>
+</p>
+<ex4D:constant constant-id="4" name="Launch And Hide" type="L" value="1048576" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for Launch And Hide (1048576) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:3,1"></a>Launch And Print (2)</code>
+</p>
+<ex4D:constant constant-id="1" name="Launch And Print" type="L" value="2" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for Launch And Print (2) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:3,3"></a>Launch And Hide Others (2097152)</code>
+</p>
+<ex4D:constant constant-id="3" name="Launch And Hide Others" type="L" value="2097152" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for Launch And Hide Others (2097152) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:3,7"></a>Launch Without Adding Recents (256)</code>
+</p>
+<ex4D:constant constant-id="7" name="Launch Without Adding Recents" type="L" value="256" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for Launch Without Adding Recents (256) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:3,2"></a>Launch Without Activation (512)</code>
+</p>
+<ex4D:constant constant-id="2" name="Launch Without Activation" type="L" value="512" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for Launch Without Activation (512) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:3,5"></a>Launch New Instance (524288)</code>
+</p>
+<ex4D:constant constant-id="5" name="Launch New Instance" type="L" value="524288" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for Launch New Instance (524288) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:3,6"></a>Launch Asyncronous (65536)</code>
+</p>
+<ex4D:constant constant-id="6" name="Launch Asyncronous" type="L" value="65536" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for Launch Asyncronous (65536) here-->
+</ex4D:constant>
+<a name="constant:4"></a>
+<h2>Finder Operation</h2>
+<p>
+<code><a name="constant:4,1"></a>Operation Move (0)</code>
+</p>
+<ex4D:constant constant-id="1" name="Operation Move" type="L" value="0" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for Operation Move (0) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:4,2"></a>Operation Copy (1)</code>
+</p>
+<ex4D:constant constant-id="2" name="Operation Copy" type="L" value="1" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for Operation Copy (1) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:4,3"></a>Operation Link (2)</code>
+</p>
+<ex4D:constant constant-id="3" name="Operation Link" type="L" value="2" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for Operation Link (2) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:4,4"></a>Operation Compress (3)</code>
+</p>
+<ex4D:constant constant-id="4" name="Operation Compress" type="L" value="3" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for Operation Compress (3) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:4,5"></a>Operation Decompress (4)</code>
+</p>
+<ex4D:constant constant-id="5" name="Operation Decompress" type="L" value="4" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for Operation Decompress (4) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:4,6"></a>Operation Encrypt (5)</code>
+</p>
+<ex4D:constant constant-id="6" name="Operation Encrypt" type="L" value="5" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for Operation Encrypt (5) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:4,7"></a>Operation Decrypt (6)</code>
+</p>
+<ex4D:constant constant-id="7" name="Operation Decrypt" type="L" value="6" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for Operation Decrypt (6) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:4,8"></a>Operation Destroy (7)</code>
+</p>
+<ex4D:constant constant-id="8" name="Operation Destroy" type="L" value="7" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for Operation Destroy (7) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:4,9"></a>Operation Recycle (8)</code>
+</p>
+<ex4D:constant constant-id="9" name="Operation Recycle" type="L" value="8" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for Operation Recycle (8) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:4,10"></a>Operation Duplicate (9)</code>
+</p>
+<ex4D:constant constant-id="10" name="Operation Duplicate" type="L" value="9" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for Operation Duplicate (9) here-->
+</ex4D:constant>
+<a name="constant:5"></a>
+<h2>Full Screen Option</h2>
+<p>
+<code><a name="constant:5,1"></a>Full Screen Hide Cursor (1)</code>
+</p>
+<ex4D:constant constant-id="1" name="Full Screen Hide Cursor" type="L" value="1" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for Full Screen Hide Cursor (1) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:5,2"></a>Full Screen Allow Events (2)</code>
+</p>
+<ex4D:constant constant-id="2" name="Full Screen Allow Events" type="L" value="2" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for Full Screen Allow Events (2) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:5,3"></a>Full Screen Keep Menu Bar  (4)</code>
+</p>
+<ex4D:constant constant-id="3" name="Full Screen Keep Menu Bar " type="L" value="4" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for Full Screen Keep Menu Bar  (4) here-->
+</ex4D:constant>
+<a name="constant:6"></a>
+<h2>Open Option</h2>
+<p>
+<code><a name="constant:6,2"></a>Open And Stay Active (0)</code>
+</p>
+<ex4D:constant constant-id="2" name="Open And Stay Active" type="L" value="0" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for Open And Stay Active (0) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:6,1"></a>Open And Deactivate (1)</code>
+</p>
+<ex4D:constant constant-id="1" name="Open And Deactivate" type="L" value="1" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for Open And Deactivate (1) here-->
+</ex4D:constant>
+<p class="footer">
+<span class="title">Documentation Update: </span>2012-07-09T00:17:5009:00</p>
+</body>
+</html>
