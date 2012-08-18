@@ -209,12 +209,9 @@
 			<key>ChosenToolbarItems</key>
 			<array>
 				<string>active-combo-popup</string>
-				<string>active-buildstyle-popup</string>
 				<string>action</string>
 				<string>NSToolbarFlexibleSpaceItem</string>
 				<string>debugger-enable-breakpoints</string>
-				<string>build</string>
-				<string>clean-target</string>
 				<string>build-and-go</string>
 				<string>com.apple.ide.PBXToolbarStopButton</string>
 				<string>get-info</string>
@@ -257,7 +254,7 @@
 						<dict>
 							<key>PBXSmartGroupTreeModuleColumnWidthsKey</key>
 							<array>
-								<real>186</real>
+								<real>201</real>
 							</array>
 							<key>PBXSmartGroupTreeModuleColumnsKey_v4</key>
 							<array>
@@ -278,7 +275,7 @@
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 0}, {186, 445}}</string>
+							<string>{{0, 0}, {201, 445}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -294,7 +291,7 @@
 						<key>GroupTreeTableConfiguration</key>
 						<array>
 							<string>MainColumn</string>
-							<real>186</real>
+							<real>201</real>
 						</array>
 						<key>RubberWindowFrame</key>
 						<string>326 295 788 504 0 0 1440 878 </string>
@@ -325,10 +322,10 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>D12BC4CA15AA5FBC00C74C89</string>
+										<string>D1AC141A15DF9F5200D4512D</string>
 										<key>history</key>
 										<array>
-											<string>D12BC4B015AA5C9C00C74C89</string>
+											<string>D12BC4CA15AA5FBC00C74C89</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -340,14 +337,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {580, 269}}</string>
+								<string>{{0, 0}, {580, 260}}</string>
 								<key>RubberWindowFrame</key>
 								<string>326 295 788 504 0 0 1440 878 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>269pt</string>
+							<string>260pt</string>
 						</dict>
 						<dict>
 							<key>ContentConfiguration</key>
@@ -360,14 +357,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 274}, {580, 189}}</string>
+								<string>{{0, 265}, {580, 198}}</string>
 								<key>RubberWindowFrame</key>
 								<string>326 295 788 504 0 0 1440 878 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
 							<key>Proportion</key>
-							<string>189pt</string>
+							<string>198pt</string>
 						</dict>
 					</array>
 					<key>Proportion</key>
@@ -386,9 +383,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>D12BC4CB15AA5FBC00C74C89</string>
+				<string>D1AC141B15DF9F5200D4512D</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>D12BC4CC15AA5FBC00C74C89</string>
+				<string>D1AC141C15DF9F5200D4512D</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -527,7 +524,7 @@
 	<key>WindowOrderList</key>
 	<array>
 		<string>D12BC4AD15AA5C9B00C74C89</string>
-		<string>/Volumes/Support/一時的/Workspace Services/Workspace Services.xcodeproj</string>
+		<string>/Users/miyako/github-miyako/4d-plugin-workspace-services/Workspace Services/Workspace Services.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
 	<string>326 295 788 504 0 0 1440 878 </string>
@@ -607,7 +604,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>D12BC4AD15AA5C9B00C74C89</string>
-				<string>D12BC4CD15AA5FBC00C74C89</string>
+				<string>D1AC141D15DF9F5200D4512D</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>

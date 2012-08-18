@@ -10,7 +10,7 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					341,
+					356,
 					20,
 					48,
 					43,
@@ -27,12 +27,12 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 363487132;
-			PBXWorkspaceStateSaveDate = 363487132;
+			PBXPerProjectTemplateStateSaveDate = 366976842;
+			PBXWorkspaceStateSaveDate = 366976842;
 		};
 		perUserProjectItems = {
-			D12BC4B015AA5C9C00C74C89 /* PBXTextBookmark */ = D12BC4B015AA5C9C00C74C89 /* PBXTextBookmark */;
 			D12BC4CA15AA5FBC00C74C89 /* PBXTextBookmark */ = D12BC4CA15AA5FBC00C74C89 /* PBXTextBookmark */;
+			D1AC141A15DF9F5200D4512D /* PBXTextBookmark */ = D1AC141A15DF9F5200D4512D /* PBXTextBookmark */;
 		};
 		sourceControlManager = D12BC4A015AA5C4200C74C89 /* Source Control */;
 		userBuildSettings = {
@@ -43,9 +43,9 @@
 	};
 	D102233715A7D4AC00B84A50 /* functions_wksp.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {724, 8655}}";
+			sepNavIntBoundsRect = "{{0, 0}, {712, 7618}}";
 			sepNavSelRange = "{2245, 0}";
-			sepNavVisRange = "{2090, 427}";
+			sepNavVisRange = "{2044, 504}";
 			sepNavWindowFrame = "{{61, 290}, {402, 541}}";
 		};
 	};
@@ -63,16 +63,6 @@
 		isa = PBXCodeSenseManager;
 		indexTemplatePath = "";
 	};
-	D12BC4B015AA5C9C00C74C89 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = D102233715A7D4AC00B84A50 /* functions_wksp.cpp */;
-		name = "functions_wksp.cpp: 96";
-		rLen = 0;
-		rLoc = 2245;
-		rType = 0;
-		vrLen = 473;
-		vrLoc = 2044;
-	};
 	D12BC4CA15AA5FBC00C74C89 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = D102233715A7D4AC00B84A50 /* functions_wksp.cpp */;
@@ -82,5 +72,15 @@
 		rType = 0;
 		vrLen = 427;
 		vrLoc = 2090;
+	};
+	D1AC141A15DF9F5200D4512D /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = D102233715A7D4AC00B84A50 /* functions_wksp.cpp */;
+		name = "functions_wksp.cpp: 96";
+		rLen = 0;
+		rLoc = 2245;
+		rType = 0;
+		vrLen = 504;
+		vrLoc = 2044;
 	};
 }
