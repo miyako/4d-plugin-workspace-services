@@ -72,15 +72,13 @@ void FINDER_Perform_operation(sLONG_PTR *pResult, PackagePtr pParams)
 	C_LONGINT returnValue;
     
 	Param1.fromParamAtIndex(pParams, 1);
-    Param1.convertPathSystemToPOSIX();    
 	Param2.fromParamAtIndex(pParams, 2);
-    Param2.convertPathSystemToPOSIX();  
-    NSString *source = Param1.copyUTF16String();
-    NSString *destination = Param2.copyUTF16String();    
-    
 	Param3.fromParamAtIndex(pParams, 3);
 	Param4.fromParamAtIndex(pParams, 4);
     
+    NSString *source = Param1.copyPath();
+    NSString *destination = Param2.copyPath();   
+	
     NSMutableArray *files = [[NSMutableArray alloc]init];
     
     for(unsigned int i = 1; i < Param3.getSize(); ++i){
@@ -287,14 +285,10 @@ void APPLICATION_Launch_paths(sLONG_PTR *pResult, PackagePtr pParams)
             NSMutableArray *urls = [[NSMutableArray alloc]init];
             
             for(unsigned int i = 1; i < Param3.getSize(); ++i){
-                CUTF16String u;
-                Param3.copyUTF16StringAtIndex(&u, i);
-                C_TEXT t;
-                t.setUTF16String(&u);
-                t.convertPathSystemToPOSIX();
-                NSString *s = t.copyUTF16String();
+                NSString *s = Param3.copyPathAtIndex(i);
                 NSURL *url = [NSURL fileURLWithPath:s];
-                if(url) [urls addObject:url];
+                if(url) 
+					[urls addObject:url];
                 [s release];
             }            
             
@@ -322,9 +316,8 @@ void FILE_Get_localized_name(sLONG_PTR *pResult, PackagePtr pParams)
 	C_TEXT returnValue;
     
 	Param1.fromParamAtIndex(pParams, 1);
-    Param1.convertPathSystemToPOSIX();
     
-    NSString *fullPath = Param1.copyUTF16String();      
+    NSString *fullPath = Param1.copyPath();      
     NSFileManager *defaultManager = [[NSFileManager alloc]init];	
 	NSString *displayNameAtPath = [defaultManager displayNameAtPath:fullPath];
     
@@ -345,9 +338,8 @@ void FILE_Open_with_application(sLONG_PTR *pResult, PackagePtr pParams)
 	Param1.fromParamAtIndex(pParams, 1);
 	Param2.fromParamAtIndex(pParams, 2);
 	Param3.fromParamAtIndex(pParams, 3);
-    Param1.convertPathSystemToPOSIX();
     
-    NSString *fullPath = Param1.copyUTF16String(); 
+    NSString *fullPath = Param1.copyPath(); 
     NSString *appId = Param2.copyUTF16String(); 
     NSString *appPath = [[NSWorkspace sharedWorkspace]absolutePathForAppBundleWithIdentifier:appId];
     if(!appPath) appPath = [[NSWorkspace sharedWorkspace]fullPathForApplication:appId];        
@@ -369,9 +361,8 @@ void FILE_Get_application_name(sLONG_PTR *pResult, PackagePtr pParams)
 	C_TEXT returnValue;
     
 	Param1.fromParamAtIndex(pParams, 1);
-    Param1.convertPathSystemToPOSIX();
-    
-    NSString *fullPath = Param1.copyUTF16String(); 
+	
+	NSString *fullPath = Param1.copyPath();	
     NSString *appName;
     NSString *fileType;
     
@@ -379,6 +370,8 @@ void FILE_Get_application_name(sLONG_PTR *pResult, PackagePtr pParams)
                                         application:&appName 
                                                type:&fileType]) returnValue.setUTF16String(appName);
     
+	[fullPath release];
+	
 	returnValue.setReturn(pResult);
 }
 
@@ -393,9 +386,9 @@ void FILE_SET_ICON(sLONG_PTR *pResult, PackagePtr pParams)
     NSImage *iconImage = Param2.copyImage();
     
     if(iconImage){
-        Param1.convertPathSystemToPOSIX();        
-        NSString *fullPath = Param1.copyUTF16String();  
-        
+		
+		NSString* fullPath = Param1.copyPath();
+		     
         [[NSWorkspace sharedWorkspace]setIcon:iconImage 
                                       forFile:fullPath 
                                       options:0];
@@ -410,12 +403,14 @@ void FILE_Get_icon(sLONG_PTR *pResult, PackagePtr pParams)
 	C_PICTURE returnValue;
     
 	Param1.fromParamAtIndex(pParams, 1);
-    Param1.convertPathSystemToPOSIX();
-    
-    NSString *fullPath = Param1.copyUTF16String();
+	
+	NSString* fullPath = Param1.copyPath();	
 	NSImage *iconImage = [[NSWorkspace sharedWorkspace]iconForFile:fullPath];
-    if(iconImage) returnValue.setImage(iconImage);
-    [fullPath release];
+	
+    if(iconImage) 
+		returnValue.setImage(iconImage);
+    
+	[fullPath release];
                           
 	returnValue.setReturn(pResult);
 }
@@ -512,10 +507,12 @@ void FOLDER_GET_CONTENTS(sLONG_PTR *pResult, PackagePtr pParams)
 	C_LONGINT Param3;
     
 	Param1.fromParamAtIndex(pParams, 1);
-    Param1.convertPathSystemToPOSIX();
     Param2.setSize(1);
-    
-    NSMutableString *fullPath = Param1.copyUTF16MutableString();    
+	
+	NSString* path = Param1.copyPath();
+    NSMutableString *fullPath = [path mutableCopy];	
+    [path release];
+   
 	if(![fullPath hasSuffix:@"/"]) [fullPath appendString:@"/"];
 	
 	Param3.fromParamAtIndex(pParams, 3);
@@ -553,10 +550,12 @@ void FOLDER_GET_SUBPATHS(sLONG_PTR *pResult, PackagePtr pParams)
 	C_LONGINT Param3;
     
 	Param1.fromParamAtIndex(pParams, 1);
-    Param1.convertPathSystemToPOSIX();
     Param2.setSize(1);
-    
-    NSMutableString *fullPath = Param1.copyUTF16MutableString();    
+	
+	NSString* path = Param1.copyPath();
+    NSMutableString *fullPath = [path mutableCopy];
+    [path release];
+	
 	if(![fullPath hasSuffix:@"/"]) [fullPath appendString:@"/"];
 	
 	Param3.fromParamAtIndex(pParams, 3);
