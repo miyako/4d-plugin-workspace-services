@@ -31,6 +31,9 @@ extern "C" {
 		uint32_t getSeconds();		
 		void setSeconds(uint32_t seconds);	
 
+		void getHourMinuteSecond(unsigned char *pHour, unsigned char *pMinute, unsigned char *pSecond);	
+		void setHourMinuteSecond(unsigned char hour, unsigned char minute, unsigned char second);	
+		
 		C_TIME();
 		~C_TIME();
 		

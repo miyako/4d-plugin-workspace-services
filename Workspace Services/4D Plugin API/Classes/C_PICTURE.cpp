@@ -9,12 +9,9 @@
 #include "C_PICTURE.h"
 
 #define CMU_TRANSFORM_PICTURE 988
-#define CMU_CONVERT_PICTURE 1002
 #define CMU_PICTURE_PROPERTIES 457
 #define CMU_CREATE_THUMBNAIL 679
-
-#define Fade_to_grey_scale 101
-#define Retain_only 1
+#define CMU_CONVERT_PICTURE 1002
 
 unsigned int CPicture::_GetCount()
 {
@@ -210,6 +207,11 @@ void CPicture::toParamAtIndex(PackagePtr pParams, uint32_t index)
 				PA_DisposePicture(*p);
 				*p = PA_DuplicatePicture(this->_CPicture, 1);//1=retain			
 			}
+		}else{
+			
+			//happens in compiled mode
+			*p = PA_DuplicatePicture(this->_CPicture, 1);//1=retain	
+			
 		}
 	}	
 }
@@ -230,190 +232,104 @@ uint32_t CPicture::getCount()
 	return this->_Count;		
 }
 
-PA_Picture CPicture::createThumbnail(unsigned int width, unsigned int height)
+PA_Picture CPicture::createCopy(const char* type)
+{
+    CUTF8String u8 = CUTF8String((const uint8_t *)type);
+    
+    uint32_t size = ((uint32_t)u8.length() * sizeof(PA_Unichar)) + sizeof(PA_Unichar);
+    std::vector<uint8_t> buf(size);
+    uint32_t len = PA_ConvertCharsetToCharset(
+                                              (char *)u8.c_str(),
+                                              (uint32_t)u8.length(),
+                                              eVTC_UTF_8,
+                                              (char *)&buf[0],
+                                              size,
+                                              eVTC_UTF_16
+                                              );    
+    CUTF16String u16 = CUTF16String((const PA_Unichar *)&buf[0], len);	
+    
+    PA_Unistring u = PA_CreateUnistring((PA_Unichar*)u16.c_str());
+    
+    PA_Picture p;
+    
+    p = PA_DuplicatePicture(this->_CPicture, 1);
+    
+    PA_Variable args[2];
+    args[0] = PA_CreateVariable(eVK_Picture);
+    PA_SetPictureVariable(&args[0], p);
+    args[1] = PA_CreateVariable(eVK_Unistring);
+    
+    PA_SetStringVariable(&args[1], &u);
+    PA_ExecuteCommandByID(CMU_CONVERT_PICTURE, args, 2);
+    
+    p = PA_GetPictureVariable(args[0]);
+    
+    PA_SetPictureVariable(&args[0], NULL);
+    
+    PA_ClearVariable(&args[0]);	
+    PA_ClearVariable(&args[1]);
+    
+    return p;    
+}
+
+PA_Picture CPicture::createGrayScale()
 {
 	PA_Picture p;
-	PA_Variable args[4];
+	
+	p = PA_DuplicatePicture(this->_CPicture, 1);
+	
+	PA_Variable args[2];
 	
 	args[0] = PA_CreateVariable(eVK_Picture);
-	args[1] = PA_CreateVariable(eVK_Picture);	
-	args[2] = PA_CreateVariable(eVK_Longint);		
-	args[3] = PA_CreateVariable(eVK_Longint);	
+	args[1] = PA_CreateVariable(eVK_Longint);
 	
-	PA_SetPictureVariable(&args[0], this->_CPicture);
-	PA_SetLongintVariable(&args[2], width);
-	PA_SetLongintVariable(&args[3], height);	
+	PA_SetPictureVariable(&args[0], p);	
+	PA_SetLongintVariable(&args[1], 101);
 	
-	PA_ExecuteCommandByID(CMU_CREATE_THUMBNAIL, args, 4);
+	PA_ExecuteCommandByID(CMU_TRANSFORM_PICTURE, args, 2);
 	
-	p = PA_GetPictureVariable(args[1]);
+	p = PA_GetPictureVariable(args[0]);
+
+	PA_SetPictureVariable(&args[0], NULL);
 	
-	PA_SetPictureVariable(&args[0], NULL);	
-	PA_SetPictureVariable(&args[1], NULL);		
-	
-	PA_ClearVariable(&args[0]);		
+	PA_ClearVariable(&args[0]);	
 	PA_ClearVariable(&args[1]);
-	PA_ClearVariable(&args[2]);
-	PA_ClearVariable(&args[3]);	
 	
-	return p;
-}
-
-void CPicture::convertToGreyScale()
-{
-	PA_Picture p;
-	
-	p = PA_DuplicatePicture(this->_CPicture, Retain_only);
-	
-	PA_Variable params[2];
-	params[0] = PA_CreateVariable(eVK_Picture);
-	PA_SetPictureVariable(&params[0], p);
-	params[1] = PA_CreateVariable(eVK_Longint);
-	PA_SetLongintVariable(&params[1], Fade_to_grey_scale);
-	PA_ExecuteCommandByID(CMU_TRANSFORM_PICTURE, params, 2);
-	
-	p = PA_GetPictureVariable(params[0]);
-	
-	setPicture(p);
-	
-	PA_ClearVariable(&params[0]);	
-	PA_ClearVariable(&params[1]);
-}
-
-void _ConvertFromUTF8(const CUTF8String *fromString, CUTF16String* toString)
-{
-	uint32_t size = ((uint32_t)fromString->length() * sizeof(PA_Unichar)) + sizeof(PA_Unichar);
-	std::vector<uint8_t> buf(size);
-	
-	uint32_t len = PA_ConvertCharsetToCharset(
-											  (char *)fromString->c_str(),
-											  (uint32_t)fromString->length(),
-											  eVTC_UTF_8,
-											  (char *)&buf[0],
-											  size,
-											  eVTC_UTF_16
-											  );
-	
-	*toString = CUTF16String((const PA_Unichar *)&buf[0], len);	
-}
-
-void CPicture::convertToPNG()
-{
-    CUTF8String u8 = CUTF8String((const uint8_t *)".png");
-    CUTF16String u16;
-    _ConvertFromUTF8(&u8, &u16);
-    PA_Unistring u = PA_CreateUnistring((PA_Unichar*)u16.c_str());
-    
-	PA_Picture p;
-	
-	p = PA_DuplicatePicture(this->_CPicture, Retain_only);
-	
-	PA_Variable params[2];
-	params[0] = PA_CreateVariable(eVK_Picture);
-	PA_SetPictureVariable(&params[0], p);
-	params[1] = PA_CreateVariable(eVK_Unistring);
-
-	PA_SetStringVariable(&params[1], &u);
-	PA_ExecuteCommandByID(CMU_CONVERT_PICTURE, params, 2);
-	
-	p = PA_GetPictureVariable(params[0]);
-	
-	setPicture(p);
-	
-    PA_DisposeUnistring(&u);
-    
-	PA_ClearVariable(&params[0]);	
-	PA_ClearVariable(&params[1]);
-}
-
-void CPicture::convertToJPG()
-{
-    CUTF8String u8 =  CUTF8String((const uint8_t *)".jpg");
-    CUTF16String u16;
-    _ConvertFromUTF8(&u8, &u16);
-    PA_Unistring u = PA_CreateUnistring((PA_Unichar*)u16.c_str());
-    
-	PA_Picture p;
-	
-	p = PA_DuplicatePicture(this->_CPicture, Retain_only);
-	
-	PA_Variable params[2];
-	params[0] = PA_CreateVariable(eVK_Picture);
-	PA_SetPictureVariable(&params[0], p);
-	params[1] = PA_CreateVariable(eVK_Unistring);
-    
-	PA_SetStringVariable(&params[1], &u);
-	PA_ExecuteCommandByID(CMU_CONVERT_PICTURE, params, 2);
-	
-	p = PA_GetPictureVariable(params[0]);
-	
-	setPicture(p);
-	
-    PA_DisposeUnistring(&u);
-    
-	PA_ClearVariable(&params[0]);	
-	PA_ClearVariable(&params[1]);
-}
-
-void CPicture::convertToTIF()
-{
-    CUTF8String u8 = CUTF8String((const uint8_t *)".tif");;
-    CUTF16String u16;
-    _ConvertFromUTF8(&u8, &u16);
-    PA_Unistring u = PA_CreateUnistring((PA_Unichar*)u16.c_str());
-    
-	PA_Picture p;
-	
-	p = PA_DuplicatePicture(this->_CPicture, Retain_only);
-	
-	PA_Variable params[2];
-	params[0] = PA_CreateVariable(eVK_Picture);
-	PA_SetPictureVariable(&params[0], p);
-	params[1] = PA_CreateVariable(eVK_Unistring);
-    
-	PA_SetStringVariable(&params[1], &u);
-	PA_ExecuteCommandByID(CMU_CONVERT_PICTURE, params, 2);
-	
-	p = PA_GetPictureVariable(params[0]);
-	
-	setPicture(p);
-	
-    PA_DisposeUnistring(&u);
-    
-	PA_ClearVariable(&params[0]);	
-	PA_ClearVariable(&params[1]);
+	return p;	
 }
 
 #if VERSIONMAC
 #ifdef __OBJC__	
 NSImage* CPicture::copyImage()
 {
-	CGImageRef cgImage = NULL;
-	NSImage *nsImage = NULL;
+    CGImageRef cgImage = NULL;
+    NSImage *nsImage = NULL;
     
     cgImage = (CGImageRef)PA_CreateNativePictureForScreen(this->_CPicture);
     
-	if(cgImage)
-	{
+    if(cgImage)
+    {
         //  10.6
-        //	nsImage = [[NSImage alloc]initWithCGImage:cgImage size:NSZeroSize];
+        nsImage = [[NSImage alloc]initWithCGImage:cgImage size:NSZeroSize];
+        /*
+        CFMutableDataRef data = CFDataCreateMutable(kCFAllocatorDefault, 0);	
+        CGImageDestinationRef destination = CGImageDestinationCreateWithData(data, kUTTypeTIFF, 1, NULL);
+        CFMutableDictionaryRef properties = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, NULL, NULL);
         
-		CFMutableDataRef data = CFDataCreateMutable(kCFAllocatorDefault, 0);	
-		CGImageDestinationRef destination = CGImageDestinationCreateWithData(data, kUTTypeTIFF, 1, NULL);
-		CFMutableDictionaryRef properties = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, NULL, NULL);
-		
-		CGImageDestinationAddImage(destination, cgImage, properties);
-		CGImageDestinationFinalize(destination);
+        CGImageDestinationAddImage(destination, cgImage, properties);
+        CGImageDestinationFinalize(destination);
         
-		CFRelease(destination);
-		CFRelease(properties);
-		
-		nsImage = [[NSImage alloc]initWithData:(NSData *)data];
+        CFRelease(destination);
+        CFRelease(properties);
         
-		CFRelease(data);
-		CFRelease(cgImage);
+        nsImage = [[NSImage alloc]initWithData:(NSData *)data];
+        
+        CFRelease(data);
+        */         
+        CFRelease(cgImage);
+
     }
-	 return nsImage;    
+    return nsImage;    
 }  
 
 void CPicture::setImage(NSImage *image)
@@ -446,6 +362,35 @@ void CPicture::getSize(unsigned int *width, unsigned int *height)
 	PA_ClearVariable(&args[0]);		
 	PA_ClearVariable(&args[1]);
 	PA_ClearVariable(&args[2]);	
+}
+
+PA_Picture CPicture::createThumbnail(unsigned int width, unsigned int height)
+{
+	PA_Picture p;
+	PA_Variable args[4];
+	
+	args[0] = PA_CreateVariable(eVK_Picture);
+	args[1] = PA_CreateVariable(eVK_Picture);	
+	args[2] = PA_CreateVariable(eVK_Longint);		
+	args[3] = PA_CreateVariable(eVK_Longint);	
+	
+	PA_SetPictureVariable(&args[0], this->_CPicture);
+	PA_SetLongintVariable(&args[2], width);
+	PA_SetLongintVariable(&args[3], height);	
+	
+	PA_ExecuteCommandByID(CMU_CREATE_THUMBNAIL, args, 4);
+	
+	p = PA_GetPictureVariable(args[1]);
+	
+	PA_SetPictureVariable(&args[0], NULL);	
+	PA_SetPictureVariable(&args[1], NULL);		
+	
+	PA_ClearVariable(&args[0]);		
+	PA_ClearVariable(&args[1]);
+	PA_ClearVariable(&args[2]);
+	PA_ClearVariable(&args[3]);	
+	
+	return p;
 }
 
 CPicture::CPicture() : _CBytes(new CBytes)
@@ -503,78 +448,41 @@ const uint8_t *C_PICTURE::getBytesPtr(CUTF8String *pType)
 	return this->_CPicture->getBytesPtr(pType);		
 }
 
-const uint8_t *C_PICTURE::getPNGBytesPtr()
-{
-    CUTF8String type = CUTF8String((const uint8_t *)".png");	
-	return this->_CPicture->getBytesPtr(&type);		
-}
-
-const uint8_t *C_PICTURE::getJPGBytesPtr()
-{
-    CUTF8String type = CUTF8String((const uint8_t *)".jpg");	
-	return this->_CPicture->getBytesPtr(&type);		
-}
-
-const uint8_t *C_PICTURE::getTIFBytesPtr()
-{
-    CUTF8String type = CUTF8String((const uint8_t *)".tif");	
-	return this->_CPicture->getBytesPtr(&type);		
-}
-
-
 uint32_t C_PICTURE::getBytesLength(CUTF8String *pType)
 {
 	return this->_CPicture->getBytesLength(pType);	
 }
 
-uint32_t C_PICTURE::getPNGBytesLength()
+PA_Picture C_PICTURE::createGrayScale()
 {
-    CUTF8String type = CUTF8String((const uint8_t *)".png");
-	return this->_CPicture->getBytesLength(&type);	
+	return this->_CPicture->createGrayScale();	
 }
 
-uint32_t C_PICTURE::getJPGBytesLength()
+PA_Picture C_PICTURE::createCopyPNG()
 {
-    CUTF8String type = CUTF8String((const uint8_t *)".jpg");
-	return this->_CPicture->getBytesLength(&type);	
+    return this->_CPicture->createCopy(".png");	
 }
 
-uint32_t C_PICTURE::getTIFBytesLength()
+PA_Picture C_PICTURE::createCopyJPG()
 {
-    CUTF8String type = CUTF8String((const uint8_t *)".tif");
-	return this->_CPicture->getBytesLength(&type);	
+    return this->_CPicture->createCopy(".jpg");	
 }
 
-void C_PICTURE::convertToGreyScale()
+PA_Picture C_PICTURE::createCopyTIF()
 {
-	this->_CPicture->convertToGreyScale();	
-}
-
-void C_PICTURE::convertToPNG()
-{
-	this->_CPicture->convertToPNG();	
-}
-
-void C_PICTURE::convertToJPG()
-{
-	this->_CPicture->convertToJPG();	
-}
-
-void C_PICTURE::convertToTIF()
-{
-	this->_CPicture->convertToTIF();	
+    return this->_CPicture->createCopy(".tif");	
 }
 
 #if VERSIONMAC
 #ifdef __OBJC__	
 NSImage* C_PICTURE::copyImage()
 {
-	return this->_CPicture->copyImage();	
+    return this->_CPicture->copyImage();	
 } 
 
 void C_PICTURE::setImage(NSImage *image)
 {
-	this->_CPicture->setImage(image);	
+    this->_CPicture->setImage(image);	
 } 
 #endif
 #endif

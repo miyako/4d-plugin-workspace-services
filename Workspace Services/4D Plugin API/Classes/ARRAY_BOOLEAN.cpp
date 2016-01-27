@@ -10,9 +10,9 @@
 
 static unsigned char tabTrue [ 8 ] = { 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80 };
 
-static char GetBitInTable( unsigned char *bitTable, long index)
+static bool GetBitInTable( unsigned char *bitTable, long index)
 {
-	return (char) ( ( *( bitTable + ( index >> 3 ) ) & tabTrue[ index & 7 ] ) ? 1 : 0 );
+	return (bool) ( ( *( bitTable + ( index >> 3 ) ) & tabTrue[ index & 7 ] ) ? 1 : 0 );
 }
 
 void ARRAY_BOOLEAN::fromParamAtIndex(PackagePtr pParams, uint16_t index)
@@ -31,7 +31,7 @@ void ARRAY_BOOLEAN::fromParamAtIndex(PackagePtr pParams, uint16_t index)
 			
 			for(i = 0; i <= (uint32_t)arr.uValue.fArray.fNbElements; i++)
 			{
-				booleanValue = (bool)GetBitInTable( *(unsigned char**) (arr.uValue.fArray.fData), i );
+				booleanValue = GetBitInTable( *(unsigned char**) (arr.uValue.fArray.fData), i );
 				this->_CboolArray->push_back(booleanValue);				
 			}
 			

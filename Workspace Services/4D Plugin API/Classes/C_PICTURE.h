@@ -17,6 +17,9 @@ class CBytes;
 extern "C" {
 #endif
 	
+    typedef std::basic_string<PA_Unichar> CUTF16String;
+    typedef std::basic_string<uint8_t> CUTF8String;	
+    
 	class CPicture
 	{
 		
@@ -51,18 +54,16 @@ extern "C" {
 		PA_Picture getPicture();
 		void setPicture(PA_Picture picture);
 		
-		void convertToGreyScale();	
-		void convertToPNG();	        
-		void convertToJPG();			
-		void convertToTIF();		
-		
+		PA_Picture createGrayScale();	
+        PA_Picture createCopy(const char* type);
+        
 #if VERSIONMAC
 #ifdef __OBJC__	
-		NSImage* copyImage();            
-		void setImage(NSImage *image);           
+        NSImage* copyImage();            
+        void setImage(NSImage *image);           
 #endif
-#endif
-        
+#endif		
+
 		void getSize(unsigned int *width, unsigned int *height);	
 		PA_Picture createThumbnail(unsigned int width, unsigned int height);
 		
@@ -88,31 +89,24 @@ extern "C" {
 		
 		const uint8_t *getBytesPtr(CUTF8String *pType);
 		uint32_t getBytesLength(CUTF8String *pType);
-
-		const uint8_t *getPNGBytesPtr();
-		uint32_t getPNGBytesLength();		
-		const uint8_t *getJPGBytesPtr();
-		uint32_t getJPGBytesLength();	
-		const uint8_t *getTIFBytesPtr();
-		uint32_t getTIFBytesLength();	
-        
+		
 		void fromFileAtPath(CUTF8String *pFilePath);
 		
 		PA_Picture getPicture();
 		void setPicture(PA_Picture picture);
 
-		void convertToGreyScale();
-        
-		void convertToPNG();		
-		void convertToJPG();			
-		void convertToTIF();
-
+		PA_Picture createGrayScale();
+        PA_Picture createCopyPNG();
+        PA_Picture createCopyJPG();
+        PA_Picture createCopyTIF();     
+		
 #if VERSIONMAC
 #ifdef __OBJC__	
-		NSImage* copyImage();        
-		void setImage(NSImage *image);        
+        NSImage* copyImage();        
+        void setImage(NSImage *image);        
 #endif
-#endif        
+#endif 		
+
 		void getSize(unsigned int *width, unsigned int *height);	
 		PA_Picture createThumbnail(unsigned int width, unsigned int height);
 		

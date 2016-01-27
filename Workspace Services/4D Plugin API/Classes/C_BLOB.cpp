@@ -31,8 +31,12 @@ void CBytes::toParamAtIndex(PackagePtr pParams, uint32_t index)
 		if (*h) PA_DisposeHandle(*h);
 				
 		PA_Handle d = PA_NewHandle((unsigned int)this->_CBytes.size());
-		PA_MoveBlock((char *)&this->_CBytes[0], PA_LockHandle(d), (unsigned int)this->_CBytes.size());
-		PA_UnlockHandle(d);
+        
+        if(this->_CBytes.size())//  0 is apparently a range violation on windows
+        {
+            PA_MoveBlock((char *)&this->_CBytes[0], PA_LockHandle(d), (unsigned int)this->_CBytes.size());
+            PA_UnlockHandle(d);
+        }
 		
 		*h = d;
 	}
@@ -63,8 +67,12 @@ void CBytes::setReturn(sLONG_PTR *pResult)
 	PA_Handle *h = (PA_Handle *)pResult;
 	
 	PA_Handle d = PA_NewHandle((unsigned int)this->_CBytes.size());
-	PA_MoveBlock((char *)&this->_CBytes[0], PA_LockHandle(d), (unsigned int)this->_CBytes.size());
-	PA_UnlockHandle(d);
+    
+    if(this->_CBytes.size())//  0 is apparently a range violation on windows
+    {
+        PA_MoveBlock((char *)&this->_CBytes[0], PA_LockHandle(d), (unsigned int)this->_CBytes.size());
+        PA_UnlockHandle(d);
+    }
 	
 	*h = d;
 }
@@ -110,6 +118,7 @@ void CBytes::toHexText(C_TEXT *hex)
 	const std::vector<uint8_t>::const_iterator binend = this->_CBytes.end();
 	
 	for (std::vector<uint8_t>::const_iterator i = this->_CBytes.begin(); i != binend; ++i) {
+        PA_YieldAbsolute();
 #if VERSIONMAC
 		sprintf((char *)&buf[0], "%02x", *i);
 #else
@@ -137,7 +146,7 @@ void CBytes::fromHexText(C_TEXT *hex)
 	this->_CBytes.resize(0);
 	
 	for(pos = 0; pos < t.length(); pos++){
-		
+		PA_YieldAbsolute();
 		size_t f = v.find(t[pos]);
 		
 		if(f == std::string::npos){
@@ -145,7 +154,7 @@ void CBytes::fromHexText(C_TEXT *hex)
 			break;
 		} 
 		
-		if(((int)f >= 0) && (f <= 15)){
+		if(f <= 15){
 			
 			if(data_in_buffer){
 				this->_CBytes.push_back(static_cast<uint8_t>((buf << 4) + f));
@@ -199,6 +208,7 @@ void CBytes::fromB64Text(C_TEXT *b64)
 	unsigned int accumulator = 0;
 	
 	for (CUTF8String::const_iterator i = t.begin(); i != last; ++i) {
+        PA_YieldAbsolute();
 		const int c = *i;
 		if (isspace(c) || c == '=') {
 			// Skip whitespace and padding. Be liberal in what you accept.
@@ -237,6 +247,7 @@ void CBytes::toB64Text(C_TEXT *b64)
 	const std::vector<uint8_t>::const_iterator binend = this->_CBytes.end();
 	
 	for (std::vector<uint8_t>::const_iterator i = this->_CBytes.begin(); i != binend; ++i) {
+        PA_YieldAbsolute();
 		accumulator = (accumulator << 8) | (*i & 0xffu);
 		bits_collected += 8;
 		while (bits_collected >= 6) {

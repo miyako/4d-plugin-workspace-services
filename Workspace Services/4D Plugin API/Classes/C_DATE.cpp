@@ -77,39 +77,3 @@ C_DATE::C_DATE() : _year(0), _month(0), _day(0)
 C_DATE::~C_DATE()
 { 
 }
-
-#if VERSIONMAC
-#ifdef __OBJC__	
-NSDate *CreateNSDateFromDateTime(C_DATE *date, C_TIME *time)
-{
-	CFGregorianDate d;
-	d.year		= date->getYear();
-	d.month		= date->getMonth();
-	d.day		= date->getDay();
-	d.hour		= 0;
-	d.minute	= 0;
-	d.second	= 0;
-	
-	CFGregorianUnits h;
-	h.years		= 0;
-	h.months	= 0;
-	h.days		= 0;	
-	h.minutes	= 0;
-	h.hours		= 0;
-	h.seconds	= time->getSeconds();
-	
-	NSTimeZone *z = [NSTimeZone localTimeZone];
-	
-	NSDate *nd = NULL;
-	
-	if(CFGregorianDateIsValid(d, kCFGregorianUnitsYears+kCFGregorianUnitsMonths+kCFGregorianUnitsDays))
-	{
-		CFAbsoluteTime at = CFGregorianDateGetAbsoluteTime(d, (CFTimeZoneRef)z);
-		CFAbsoluteTime s = CFAbsoluteTimeAddGregorianUnits(at, (CFTimeZoneRef)z, h);		
-		nd= (NSDate *)CFDateCreate(kCFAllocatorDefault, s);
-	}	
-	
-	return nd;
-}
-#endif	
-#endif

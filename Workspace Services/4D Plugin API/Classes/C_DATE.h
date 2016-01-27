@@ -33,6 +33,7 @@ extern "C" {
 		uint16_t getYear();	
 		uint16_t getMonth();
 		uint16_t getDay();
+		
 		void getYearMonthDay(uint16_t *pYear, uint16_t *pMonth, uint16_t *pDay);			
 		void setYearMonthDay(uint16_t year, uint16_t month, uint16_t day);	
 		
@@ -40,14 +41,6 @@ extern "C" {
 		~C_DATE();
 		
 	};
-	
-#if VERSIONMAC
-#ifdef __OBJC__	
-//need this for GCC 4.0 and 10.4u sdk support	
-	class C_TIME;
-	NSDate *CreateNSDateFromDateTime(C_DATE *date, C_TIME *time);
-#endif	
-#endif	
 	
 #ifdef __cplusplus
 }
