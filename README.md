@@ -10,7 +10,8 @@ These carbon/quicktime commands do nothing on 64 bits:
 * FULL SCREEN BEGIN
 * FULL SCREEN END
 
-##Commands
+Commands
+---
 
 ```cpp
 // --- Finder
