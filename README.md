@@ -5,8 +5,9 @@ Collection of OS X native file manager commands.
 
 ##Platform
 
-*32 bits: 10.6 or later
-#64 bits: 10.8 or later
+| carbon | cocoa | windows32 | windows64 |
+|:------:|:-----:|:---------:|:---------:|
+|10.6|10.8|×|×|
 
 ###Remarks
 
