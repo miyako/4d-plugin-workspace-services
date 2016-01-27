@@ -7,7 +7,7 @@ Collection of OS X native file manager commands.
 
 | carbon | cocoa | win32 | win64 |
 |:------:|:-----:|:---------:|:---------:|
-|10.6|10.8|✖️|✖️|
+|10.6|10.8|🚫|🚫|
 
 ###Remarks
 
