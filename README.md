@@ -1,7 +1,12 @@
 4d-plugin-workspace-services
 ============================
 
-Collection of functions from the NSFileManager and NSWorkSpace classes on OS X 10.5 and later.
+Collection of OS X native file manager commands.
+
+##Platform
+
+*32 bits: 10.6 or later
+#64 bits: 10.8 or later
 
 ###Remarks
 
