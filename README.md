@@ -283,4 +283,15 @@ success|LONGINT|
 
 [openFile:withApplication:andDeactivate:](https://developer.apple.com/documentation/appkit/nsworkspace/1530182-openfile?language=objc)
 
+```
+FOLDER GET CONTENTS (path;paths;pathType)
+FOLDER GET SUBPATHS (path;paths;pathType)
+```
 
+Parameter|Type|Description
+------------|------------|----
+path|TEXT|
+paths|ARRAY TEXT|
+pathType|LONGINT|see constants
+
+consider native 4D command ``DOCUMENT LIST``
