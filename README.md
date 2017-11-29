@@ -49,7 +49,9 @@ Operation Recycle 8
 Operation Duplicate 9
 ```
 
+```
 icon:=FINDER Get icon for file type (typeId;fileType)
+```
 
 Parameter|Type|Description
 ------------|------------|----
