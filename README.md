@@ -212,3 +212,63 @@ Launch And Hide 1048576
 Launch And Hide Others 2097152
 ```
 
+```
+label:=DOCK Get badge label
+DOCK SET BADGE LABEL (label)
+```
+
+Parameter|Type|Description
+------------|------------|----
+label|TEXT|
+
+```
+icon:=DOCK Get icon
+DOCK SET ICON (icon)
+```
+
+Parameter|Type|Description
+------------|------------|----
+icon|PICTURE|
+
+setting an empty picture resets the dock icon
+
+```
+icon:=FILE Get icon (path)
+FILE SET ICON (path;icon)
+```
+
+Parameter|Type|Description
+------------|------------|----
+path|TEXT|
+icon|PICTURE|
+
+```
+result:=FILE Get application name (path)
+```
+
+Parameter|Type|Description
+------------|------------|----
+path|TEXT|
+appName|TEXT|[getInfoForFile:application:type:](https://developer.apple.com/documentation/appkit/nsworkspace/1535102-getinfoforfile?language=objc)
+
+```
+name:=FILE Get localized name (path)
+```
+
+Parameter|Type|Description
+------------|------------|----
+path|TEXT|
+name|TEXT|[displayNameAtPath:](https://developer.apple.com/documentation/foundation/nsfilemanager/1409751-displaynameatpath)
+
+```
+success:=FILE Open with application (path;appId;deactivate)
+```
+
+Parameter|Type|Description
+------------|------------|----
+path|TEXT|
+appId|TEXT|
+deactivate|LONGINT|
+success|LONGINT|[openFile:withApplication:andDeactivate:](https://developer.apple.com/documentation/appkit/nsworkspace/1530182-openfile?language=objc)
+
+
