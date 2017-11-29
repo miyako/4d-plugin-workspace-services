@@ -191,7 +191,7 @@ appId|TEXT|
 options|LONGINT|see constants
 success|LONGINT|return value of [launchAppWithBundleIdentifier:options:additionalEventParamDescriptor:launchIdentifier:](https://developer.apple.com/documentation/appkit/nsworkspace/1533335-launchappwithbundleidentifier?language=objc)
 
-success:=APPLICATION Launch paths (appId;options;arg3)
+success:=APPLICATION Launch paths (appId;options;paths)
 
 Parameter|Type|Description
 ------------|------------|----
