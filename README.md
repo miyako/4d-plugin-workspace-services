@@ -160,3 +160,55 @@ APPEND TO ARRAY($path;$filePath2)
 
 APPLICATION Launch paths ($appName;Launch Without Activation | Launch And Print;$path)
 ```
+
+```
+result:=APPLICATION Get path (appId;pathStyle)
+```
+
+Parameter|Type|Description
+------------|------------|----
+appId|TEXT|
+pathStyle|LONGINT|see constants
+result|TEXT|
+
+* Path Styles
+
+```
+Path Style HFS 0
+Path Style POSIX 1
+Path Style URL 2
+```
+
+returns the absolute or full path for the specified application, in the requested format
+
+```
+success:=APPLICATION Launch (appId;options)
+```
+
+Parameter|Type|Description
+------------|------------|----
+appId|TEXT|
+options|LONGINT|see constants
+success|LONGINT|return value of [launchAppWithBundleIdentifier:options:additionalEventParamDescriptor:launchIdentifier:](https://developer.apple.com/documentation/appkit/nsworkspace/1533335-launchappwithbundleidentifier?language=objc)
+
+success:=APPLICATION Launch paths (appId;options;arg3)
+
+Parameter|Type|Description
+------------|------------|----
+appId|TEXT|
+options|LONGINT|see constants
+paths|ARRAY TEXT|paths (internally converted from HFS to URL)
+success|LONGINT|return value of [openURLs:withAppBundleIdentifier:options:additionalEventParamDescriptor:launchIdentifiers:](https://developer.apple.com/documentation/appkit/nsworkspace/1535886-openurls?language=objc)
+
+* Launch Options
+
+```
+Launch And Print 2
+Launch Without Adding Recents 256
+Launch Without Activation 512
+Launch Asyncronous 65536
+Launch New Instance 524288
+Launch And Hide 1048576
+Launch And Hide Others 2097152
+```
+
