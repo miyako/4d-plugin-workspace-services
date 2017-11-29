@@ -261,54 +261,66 @@ void FINDER_Get_icon_for_file_type(sLONG_PTR *pResult, PackagePtr pParams)
 {
 	C_TEXT Param1;
 	C_LONGINT Param2;
-	C_PICTURE returnValue;
-    
+	
 	Param1.fromParamAtIndex(pParams, 1);
 	Param2.fromParamAtIndex(pParams, 2);
     
-    NSString *typeId = Param1.copyUTF16String(); 
+	NSString *typeId = Param1.copyUTF16String();
 	unsigned int fileType = Param2.getIntValue();
-    
-    NSString *fileUTI = NULL;  
+	
+	NSString *fileUTI = NULL;
 	NSImage *iconImage = NULL;
-    
-    switch (fileType) {
-        case FileTypeMIME:
-            fileUTI = (NSString *)UTTypeCopyPreferredTagWithClass(
-                                            UTTypeCreatePreferredIdentifierForTag(
-                                                                                  kUTTagClassMIMEType, 
-                                                                                  (CFStringRef)typeId, 
-                                                                                  NULL), 
-                                            kUTTagClassFilenameExtension);
-            if(fileUTI){
-                iconImage = [[NSWorkspace sharedWorkspace]iconForFileType:fileUTI]; 
-                [fileUTI release];
-            }
-            break;
-            
-        case FileOSType:
-            fileUTI = NSFileTypeForHFSTypeCode(UTGetOSTypeFromString((CFStringRef)typeId));
-            if(fileUTI) iconImage = [[NSWorkspace sharedWorkspace]iconForFileType:fileUTI];          
-            break;
-            
-        case FileExtension:
-            iconImage = [[NSWorkspace sharedWorkspace]iconForFileType:typeId];            
-            break; 
-            
-        default:
-            fileUTI = (NSString *)UTTypeCopyPreferredTagWithClass((CFStringRef)typeId, kUTTagClassFilenameExtension);
-            if(fileUTI){
-                iconImage = [[NSWorkspace sharedWorkspace]iconForFileType:fileUTI]; 
-                [fileUTI release];
-            } 
-            break;            
-    }
-        
-    if(iconImage) returnValue.setImage(iconImage);   
-    
-	returnValue.setReturn(pResult);
+	
+	switch (fileType) {
+		case FileTypeMIME:
+			fileUTI = (NSString *)UTTypeCopyPreferredTagWithClass(
+																														UTTypeCreatePreferredIdentifierForTag(
+																																																	kUTTagClassMIMEType,
+																																																	(CFStringRef)typeId,
+																																																	NULL),
+																														kUTTagClassFilenameExtension);
+			if(fileUTI){
+				iconImage = [[NSWorkspace sharedWorkspace]iconForFileType:fileUTI];
+				[fileUTI release];
+			}
+			break;
+			
+		case FileOSType:
+			fileUTI = NSFileTypeForHFSTypeCode(UTGetOSTypeFromString((CFStringRef)typeId));
+			if(fileUTI) iconImage = [[NSWorkspace sharedWorkspace]iconForFileType:fileUTI];
+			break;
+			
+		case FileExtension:
+			iconImage = [[NSWorkspace sharedWorkspace]iconForFileType:typeId];
+			break;
+			
+		default:
+			fileUTI = (NSString *)UTTypeCopyPreferredTagWithClass((CFStringRef)typeId, kUTTagClassFilenameExtension);
+			if(fileUTI){
+				iconImage = [[NSWorkspace sharedWorkspace]iconForFileType:fileUTI];
+				[fileUTI release];
+			}
+			break;
+	}
+	
+	if(iconImage)
+	{
+		//return picture without memory leak; avoid the use of - TIFFRepresentation
+		NSRect imageRect = NSMakeRect(0, 0, iconImage.size.width , iconImage.size.height);
+		CGImageRef image = [iconImage CGImageForProposedRect:(NSRect *)&imageRect context:NULL hints:NULL];
+		CFMutableDataRef data = CFDataCreateMutable(kCFAllocatorDefault, 0);
+		CGImageDestinationRef destination = CGImageDestinationCreateWithData(data, kUTTypeTIFF, 1, NULL);
+		CFMutableDictionaryRef properties = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, NULL, NULL);
+		CGImageDestinationAddImage(destination, image, properties);
+		CGImageDestinationFinalize(destination);
+		PA_Picture picture = PA_CreatePicture((void *)CFDataGetBytePtr(data), CFDataGetLength(data));
+		*(PA_Picture*) pResult = picture;
+		CFRelease(destination);
+		CFRelease(properties);
+		CFRelease(data);
+	}
 
-    [typeId release];
+	[typeId release];
 }
 
 // ---------------------------------- Application ---------------------------------
@@ -495,41 +507,51 @@ void FILE_Get_application_name(sLONG_PTR *pResult, PackagePtr pParams)
 void FILE_SET_ICON(sLONG_PTR *pResult, PackagePtr pParams)
 {
 	C_TEXT Param1;
-	C_PICTURE Param2;
-    
+	
 	Param1.fromParamAtIndex(pParams, 1);    
-	Param2.fromParamAtIndex(pParams, 2);
-    
-    NSImage *iconImage = Param2.copyImage();
-    
-    if(iconImage){
+
+	PA_Picture p = *(PA_Picture *)(pParams[1]);
+	CGImageRef cgImage = (CGImageRef)PA_CreateNativePictureForScreen(p);
+	NSImage *iconImage = [[NSImage alloc]initWithCGImage:cgImage size:NSZeroSize];
+	if(iconImage){
 		
 		NSString* fullPath = Param1.copyPath();
-		     
-        [[NSWorkspace sharedWorkspace]setIcon:iconImage 
-                                      forFile:fullPath 
-                                      options:0];
-        [fullPath release];
-        [iconImage release];        
-    }
+		
+		[[NSWorkspace sharedWorkspace]setIcon:iconImage
+																	forFile:fullPath
+																	options:0];
+		[fullPath release];
+		[iconImage release];
+	}
 }
 
 void FILE_Get_icon(sLONG_PTR *pResult, PackagePtr pParams)
 {
 	C_TEXT Param1;
-	C_PICTURE returnValue;
-    
+	
 	Param1.fromParamAtIndex(pParams, 1);
 	
 	NSString* fullPath = Param1.copyPath();	
-	NSImage *iconImage = [[NSWorkspace sharedWorkspace]iconForFile:fullPath];
+	NSImage *icon = [[NSWorkspace sharedWorkspace]iconForFile:fullPath];
 	
-    if(iconImage) 
-		returnValue.setImage(iconImage);
-    
+	if (icon)
+	{
+		//return picture without memory leak; avoid the use of - TIFFRepresentation
+		NSRect imageRect = NSMakeRect(0, 0, icon.size.width , icon.size.height);
+		CGImageRef image = [icon CGImageForProposedRect:(NSRect *)&imageRect context:NULL hints:NULL];
+		CFMutableDataRef data = CFDataCreateMutable(kCFAllocatorDefault, 0);
+		CGImageDestinationRef destination = CGImageDestinationCreateWithData(data, kUTTypeTIFF, 1, NULL);
+		CFMutableDictionaryRef properties = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, NULL, NULL);
+		CGImageDestinationAddImage(destination, image, properties);
+		CGImageDestinationFinalize(destination);
+		PA_Picture picture = PA_CreatePicture((void *)CFDataGetBytePtr(data), CFDataGetLength(data));
+		*(PA_Picture*) pResult = picture;
+		CFRelease(destination);
+		CFRelease(properties);
+		CFRelease(data);
+	}
+	
 	[fullPath release];
-                          
-	returnValue.setReturn(pResult);
 }
 
 // ------------------------------------- Dock -------------------------------------
@@ -547,12 +569,23 @@ void DOCK_SET_BADGE_LABEL(sLONG_PTR *pResult, PackagePtr pParams)
 
 void DOCK_Get_icon(sLONG_PTR *pResult, PackagePtr pParams)
 {
-	C_PICTURE returnValue;
-    
-	NSImage *iconImage = [[NSApplication sharedApplication] applicationIconImage];
-    if(iconImage) returnValue.setImage(iconImage);    
-    
-	returnValue.setReturn(pResult);
+	NSImage *icon = [[NSApplication sharedApplication] applicationIconImage];
+	if (icon)
+	{
+		//return picture without memory leak; avoid the use of - TIFFRepresentation
+		NSRect imageRect = NSMakeRect(0, 0, icon.size.width , icon.size.height);
+		CGImageRef image = [icon CGImageForProposedRect:(NSRect *)&imageRect context:NULL hints:NULL];
+		CFMutableDataRef data = CFDataCreateMutable(kCFAllocatorDefault, 0);
+		CGImageDestinationRef destination = CGImageDestinationCreateWithData(data, kUTTypeTIFF, 1, NULL);
+		CFMutableDictionaryRef properties = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, NULL, NULL);
+		CGImageDestinationAddImage(destination, image, properties);
+		CGImageDestinationFinalize(destination);
+		PA_Picture picture = PA_CreatePicture((void *)CFDataGetBytePtr(data), CFDataGetLength(data));
+		*(PA_Picture*) pResult = picture;
+		CFRelease(destination);
+		CFRelease(properties);
+		CFRelease(data);
+	}
 }
 
 void DOCK_Get_badge_label(sLONG_PTR *pResult, PackagePtr pParams)
@@ -567,22 +600,25 @@ void DOCK_Get_badge_label(sLONG_PTR *pResult, PackagePtr pParams)
 
 void DOCK_SET_ICON(sLONG_PTR *pResult, PackagePtr pParams)
 {
-	C_PICTURE Param1;
-    unsigned int w = 0;
-    unsigned int h = 0;
-    
-	Param1.fromParamAtIndex(pParams, 1);
-    Param1.getSize(&w, &h);	
-    
-    if((w) && (h)){
-        NSImage *iconImage = Param1.copyImage();
-        if(iconImage){
-            [[NSApplication sharedApplication]setApplicationIconImage:iconImage]; 
-            [iconImage release];        
-        }
-    }else{
-        [[NSApplication sharedApplication]setApplicationIconImage:nil]; 
-    }
+	PA_Picture p = *(PA_Picture *)(pParams[0]);
+	CGImageRef cgImage = (CGImageRef)PA_CreateNativePictureForScreen(p);
+	NSImage *iconImage = [[NSImage alloc]initWithCGImage:cgImage size:NSZeroSize];
+	
+	if(iconImage)
+	{
+		if((iconImage.size.width) && (iconImage.size.height))
+		{
+			[[NSApplication sharedApplication]setApplicationIconImage:iconImage];
+		}else
+		{
+			[[NSApplication sharedApplication]setApplicationIconImage:nil];
+		}
+		[iconImage release];
+	}else
+	{
+		[[NSApplication sharedApplication]setApplicationIconImage:nil];
+	}
+	CFRelease(cgImage);
 }
 
 // ---------------------------- Full Screen (QuickTime) ---------------------------
