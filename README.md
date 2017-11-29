@@ -64,55 +64,14 @@ File Extension 2
 File MIME Type 3
 ```
 
-### Remarks
-
-Carbon-QuickTime commands do nothing on 64 bits:
-
 ```
-FULL SCREEN BEGIN
-```
-
-```
+FULL SCREEN BEGIN (width;height;flags)
 FULL SCREEN END
 ```
 
-Commands
----
+**deprecated** [QuickTime](https://developer.apple.com/library/content/documentation/QuickTime/QT6_3/Chap1/QT6WhatsNew.html) 32-bit only
 
-```cpp
-// --- Finder
-FINDER_Perform_operation
-FINDER_Get_icon_for_file_type
-
-// --- Application
-APPLICATION_Get_path
-APPLICATION_Launch
-APPLICATION_Launch_paths
-
-// --- File
-FILE_Get_localized_name
-FILE_Open_with_application
-FILE_Get_application_name
-FILE_SET_ICON
-FILE_Get_icon
-
-// --- Dock
-DOCK_SET_BADGE_LABEL
-DOCK_Get_icon
-DOCK_Get_badge_label
-DOCK_SET_ICON
-
-// --- Full Screen (QuickTime)
-FULL_SCREEN_BEGIN
-FULL_SCREEN_END;
-
-// --- Folder
-FOLDER_GET_CONTENTS
-FOLDER_GET_SUBPATHS
-```
-
-Examples
----
+## Examples
 
 ```
 $icon:=FINDER Get icon for file type ("public.jpeg";File Extension)
