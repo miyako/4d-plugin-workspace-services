@@ -29,7 +29,9 @@ srcPath|TEXT|
 dstPath|TEXT|
 objects|ARRAY TEXT|ames of the files and directories to be manipulated
 operation|LONGINT|see constants
-success|LONGINT|return value of [performFileOperation:source:destination:files:tag:](https://developer.apple.com/documentation/appkit/nsworkspace/1524886-performfileoperation?language=objc)
+success|LONGINT|
+
+[performFileOperation:source:destination:files:tag:](https://developer.apple.com/documentation/appkit/nsworkspace/1524886-performfileoperation?language=objc)
 
 * Finder Operations
 
@@ -189,7 +191,9 @@ Parameter|Type|Description
 ------------|------------|----
 appId|TEXT|
 options|LONGINT|see constants
-success|LONGINT|return value of [launchAppWithBundleIdentifier:options:additionalEventParamDescriptor:launchIdentifier:](https://developer.apple.com/documentation/appkit/nsworkspace/1533335-launchappwithbundleidentifier?language=objc)
+success|LONGINT|
+
+[launchAppWithBundleIdentifier:options:additionalEventParamDescriptor:launchIdentifier:](https://developer.apple.com/documentation/appkit/nsworkspace/1533335-launchappwithbundleidentifier?language=objc)
 
 success:=APPLICATION Launch paths (appId;options;paths)
 
@@ -198,7 +202,9 @@ Parameter|Type|Description
 appId|TEXT|
 options|LONGINT|see constants
 paths|ARRAY TEXT|paths (internally converted from HFS to URL)
-success|LONGINT|return value of [openURLs:withAppBundleIdentifier:options:additionalEventParamDescriptor:launchIdentifiers:](https://developer.apple.com/documentation/appkit/nsworkspace/1535886-openurls?language=objc)
+success|LONGINT|
+
+[openURLs:withAppBundleIdentifier:options:additionalEventParamDescriptor:launchIdentifiers:](https://developer.apple.com/documentation/appkit/nsworkspace/1535886-openurls?language=objc)
 
 * Launch Options
 
@@ -249,7 +255,9 @@ result:=FILE Get application name (path)
 Parameter|Type|Description
 ------------|------------|----
 path|TEXT|
-appName|TEXT|[getInfoForFile:application:type:](https://developer.apple.com/documentation/appkit/nsworkspace/1535102-getinfoforfile?language=objc)
+appName|TEXT|
+
+[getInfoForFile:application:type:](https://developer.apple.com/documentation/appkit/nsworkspace/1535102-getinfoforfile?language=objc)
 
 ```
 name:=FILE Get localized name (path)
@@ -258,7 +266,9 @@ name:=FILE Get localized name (path)
 Parameter|Type|Description
 ------------|------------|----
 path|TEXT|
-name|TEXT|[displayNameAtPath:](https://developer.apple.com/documentation/foundation/nsfilemanager/1409751-displaynameatpath)
+name|TEXT|
+
+[displayNameAtPath:](https://developer.apple.com/documentation/foundation/nsfilemanager/1409751-displaynameatpath)
 
 ```
 success:=FILE Open with application (path;appId;deactivate)
@@ -269,6 +279,8 @@ Parameter|Type|Description
 path|TEXT|
 appId|TEXT|
 deactivate|LONGINT|
-success|LONGINT|[openFile:withApplication:andDeactivate:](https://developer.apple.com/documentation/appkit/nsworkspace/1530182-openfile?language=objc)
+success|LONGINT|
+
+[openFile:withApplication:andDeactivate:](https://developer.apple.com/documentation/appkit/nsworkspace/1530182-openfile?language=objc)
 
 
