@@ -17,6 +17,51 @@ Collection of OS X native file manager commands.
 
 [1.2](https://github.com/miyako/4d-plugin-workspace-services/releases/tag/1.2)
 
+## Syntax
+
+```
+result:=FINDER Perform operation (srcPath;dstPath;objects;operation)
+```
+
+Parameter|Type|Description
+------------|------------|----
+srcPath|TEXT|
+dstPath|TEXT|
+objects|ARRAY TEXT|ames of the files and directories to be manipulated
+operation|LONGINT|see constants
+success|LONGINT|return value of [performFileOperation:source:destination:files:tag:](https://developer.apple.com/documentation/appkit/nsworkspace/1524886-performfileoperation?language=objc)
+
+* Finder Operations
+
+```c
+Operation Move 0
+Operation Copy 1
+Operation Link 2
+Operation Compress 3
+Operation Decompress 4
+Operation Encrypt 5
+Operation Decrypt 6
+Operation Destroy 7
+Operation Recycle 8
+Operation Duplicate 9
+```
+
+icon:=FINDER Get icon for file type (typeId;fileType)
+
+Parameter|Type|Description
+------------|------------|----
+typeId|TEXT|
+fileType|LONGINT|see constants
+
+* File Types
+
+```c
+File OSType 0
+File UTI 1
+File Extension 2
+File MIME Type 3
+```
+
 ### Remarks
 
 Carbon-QuickTime commands do nothing on 64 bits:
