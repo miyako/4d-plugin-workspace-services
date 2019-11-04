@@ -14,7 +14,9 @@
 
 #if VERSIONMAC
 //#define PathTypeSystem	3
+#ifndef __LP64__
 #include <Quicktime/Quicktime.h>
+#endif
 #include <CoreServices/CoreServices.h>
 Ptr	gOldState = NULL;
 BOOL gIsFullScreen = FALSE;

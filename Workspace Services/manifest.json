@@ -1,1 +1,96 @@
-﻿{"name":"Workspace Services","id":20000,"commands":[{"theme":"Finder","syntax":"FINDER Perform operation(&T;&T;&Y;&L):L"},{"theme":"Finder","syntax":"FINDER Get icon for file type(&T;&L):P"},{"theme":"Application","syntax":"APPLICATION Get path(&T;&L):T"},{"theme":"Application","syntax":"APPLICATION Launch(&T;&L):L"},{"theme":"Application","syntax":"APPLICATION Launch paths(&T;&L;&Y):L"},{"theme":"File","syntax":"FILE Get localized name(&T):T"},{"theme":"File","syntax":"FILE Open with application(&T;&T;&L):L"},{"theme":"File","syntax":"FILE Get application name(&T):T"},{"theme":"File","syntax":"FILE SET ICON(&T;&P)"},{"theme":"File","syntax":"FILE Get icon(&T):P"},{"theme":"Dock","syntax":"DOCK SET BADGE LABEL(&T)"},{"theme":"Dock","syntax":"DOCK Get icon:P"},{"theme":"Dock","syntax":"DOCK Get badge label:T"},{"theme":"Dock","syntax":"DOCK SET ICON(&P)"},{"theme":"Full Screen (QuickTime)","syntax":"FULL SCREEN BEGIN(&L;&L;&L)"},{"theme":"Full Screen (QuickTime)","syntax":"FULL SCREEN END"},{"theme":"Folder","syntax":"FOLDER GET CONTENTS(&T;&Y;&L)"},{"theme":"Folder","syntax":"FOLDER GET SUBPATHS(&T;&Y;&L)"}]}
+{
+    "name": "Workspace Services",
+    "id": 20000,
+    "commands": [
+        {
+            "theme": "Finder",
+            "syntax": "FINDER Perform operation(&T;&T;&Y;&L):L",
+            "threadSafe": false
+        },
+        {
+            "theme": "Finder",
+            "syntax": "FINDER Get icon for file type(&T;&L):P",
+            "threadSafe": false
+        },
+        {
+            "theme": "Application",
+            "syntax": "APPLICATION Get path(&T;&L):T",
+            "threadSafe": false
+        },
+        {
+            "theme": "Application",
+            "syntax": "APPLICATION Launch(&T;&L):L",
+            "threadSafe": false
+        },
+        {
+            "theme": "Application",
+            "syntax": "APPLICATION Launch paths(&T;&L;&Y):L",
+            "threadSafe": false
+        },
+        {
+            "theme": "File",
+            "syntax": "FILE Get localized name(&T):T",
+            "threadSafe": false
+        },
+        {
+            "theme": "File",
+            "syntax": "FILE Open with application(&T;&T;&L):L",
+            "threadSafe": false
+        },
+        {
+            "theme": "File",
+            "syntax": "FILE Get application name(&T):T",
+            "threadSafe": false
+        },
+        {
+            "theme": "File",
+            "syntax": "FILE SET ICON(&T;&P)",
+            "threadSafe": false
+        },
+        {
+            "theme": "File",
+            "syntax": "FILE Get icon(&T):P",
+            "threadSafe": false
+        },
+        {
+            "theme": "Dock",
+            "syntax": "DOCK SET BADGE LABEL(&T)",
+            "threadSafe": false
+        },
+        {
+            "theme": "Dock",
+            "syntax": "DOCK Get icon:P",
+            "threadSafe": false
+        },
+        {
+            "theme": "Dock",
+            "syntax": "DOCK Get badge label:T",
+            "threadSafe": false
+        },
+        {
+            "theme": "Dock",
+            "syntax": "DOCK SET ICON(&P)",
+            "threadSafe": false
+        },
+        {
+            "theme": "Full Screen (QuickTime)",
+            "syntax": "FULL SCREEN BEGIN(&L;&L;&L)",
+            "threadSafe": false
+        },
+        {
+            "theme": "Full Screen (QuickTime)",
+            "syntax": "FULL SCREEN END",
+            "threadSafe": false
+        },
+        {
+            "theme": "Folder",
+            "syntax": "FOLDER GET CONTENTS(&T;&Y;&L)",
+            "threadSafe": false
+        },
+        {
+            "theme": "Folder",
+            "syntax": "FOLDER GET SUBPATHS(&T;&Y;&L)",
+            "threadSafe": false
+        }
+    ]
+}
