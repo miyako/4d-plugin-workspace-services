@@ -1,21 +1,14 @@
+![version](https://img.shields.io/badge/version-16%2B-8331AE)
+![platform](https://img.shields.io/static/v1?label=platform&message=mac-intel%20|%20mac-arm&color=blue)
+[![license](https://img.shields.io/github/license/miyako/4d-plugin-jwt)](LICENSE)
+![downloads](https://img.shields.io/github/downloads/miyako/4d-plugin-jwt/total)
+
+**Note**: for v17 and earlier, move `manifest.json` to `Contents`
+
 4d-plugin-workspace-services
 ============================
 
 Collection of OS X native file manager commands.
-
-### Platform
-
-| carbon | cocoa | win32 | win64 |
-|:------:|:-----:|:---------:|:---------:|
-|<img src="https://cloud.githubusercontent.com/assets/1725068/22371562/1b091f0a-e4db-11e6-8458-8653954a7cce.png" width="24" height="24" />|<img src="https://cloud.githubusercontent.com/assets/1725068/22371562/1b091f0a-e4db-11e6-8458-8653954a7cce.png" width="24" height="24" />|||
-
-### Version
-
-<img src="https://cloud.githubusercontent.com/assets/1725068/18940649/21945000-8645-11e6-86ed-4a0f800e5a73.png" width="32" height="32" /> <img src="https://cloud.githubusercontent.com/assets/1725068/18940648/2192ddba-8645-11e6-864d-6d5692d55717.png" width="32" height="32" />
-
-### Releases
-
-[1.3](https://github.com/miyako/4d-plugin-workspace-services/releases/tag/1.3)
 
 ## Syntax
 
@@ -208,7 +201,7 @@ consider native 4D command ``DOCUMENT LIST``
 
 ## Examples
 
-```
+```4d
 $icon:=FINDER Get icon for file type ("public.jpeg";File Extension)
 SET PICTURE TO PASTEBOARD($icon)
 
@@ -221,7 +214,6 @@ SET PICTURE TO PASTEBOARD($icon)
 $icon:=FINDER Get icon for file type ("trsh";File OSType)
 SET PICTURE TO PASTEBOARD($icon)
 
-
 $icon:=FILE Get icon (Structure file)
 SET PICTURE TO PASTEBOARD($icon)
 
@@ -231,13 +223,13 @@ BLOB TO DOCUMENT($filePath;$data)
 FILE SET ICON ($filePath;$icon)
 ```
 
-```
+```4d
 FOLDER GET CONTENTS (Get 4D folder(Database folder);$pathHFS;Path Style HFS)
 FOLDER GET CONTENTS (Get 4D folder(Database folder);$pathPOS;Path Style POSIX)
 FOLDER GET CONTENTS (Get 4D folder(Database folder);$pathURL;Path Style URL)
 ```
 
-```
+```4d
 $filePath1:=System folder(Desktop)+Generate UUID+".txt"
 $filePath2:=System folder(Desktop)+Generate UUID+".txt"
 
