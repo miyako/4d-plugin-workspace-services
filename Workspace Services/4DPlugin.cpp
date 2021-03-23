@@ -23,7 +23,6 @@ BOOL gIsFullScreen = FALSE;
 
 #pragma mark -
 
-bool IsProcessOnExit(){    
 //bool IsProcessOnExit(){
 //    C_TEXT name;
 //    PA_long32 state, time;
