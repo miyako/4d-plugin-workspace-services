@@ -16,27 +16,28 @@
 //#define PathTypeSystem	3
 #ifndef __LP64__
 #include <Quicktime/Quicktime.h>
+Ptr    gOldState = NULL;
+BOOL gIsFullScreen = FALSE;
 #endif
 #include <CoreServices/CoreServices.h>
-Ptr	gOldState = NULL;
-BOOL gIsFullScreen = FALSE;
 
 #pragma mark -
 
 bool IsProcessOnExit(){    
-    C_TEXT name;
-    PA_long32 state, time;
-    PA_GetProcessInfo(PA_GetCurrentProcessNumber(), name, &state, &time);
-    CUTF16String procName(name.getUTF16StringPtr());
-    CUTF16String exitProcName((PA_Unichar *)"$\0x\0x\0\0\0");
-    return (!procName.compare(exitProcName));
-}
+//bool IsProcessOnExit(){
+//    C_TEXT name;
+//    PA_long32 state, time;
+//    PA_GetProcessInfo(PA_GetCurrentProcessNumber(), name, &state, &time);
+//    CUTF16String procName(name.getUTF16StringPtr());
+//    CUTF16String exitProcName((PA_Unichar *)"$\0x\0x\0\0\0");
+//    return (!procName.compare(exitProcName));
+//}
 
-void OnCloseProcess(){
-    if(IsProcessOnExit()){
-        FULL_SCREEN_END();
-    }
-}
+//void OnCloseProcess(){
+//    if(IsProcessOnExit()){
+//        FULL_SCREEN_END();
+//    }
+//}
 
 NSString *_pathToURL(NSString *posix)
 {	
@@ -90,9 +91,9 @@ void CommandDispatcher (PA_long32 pProcNum, sLONG_PTR *pResult, PackagePtr pPara
 {
 	switch(pProcNum)
 	{
-				case kCloseProcess :
-								OnCloseProcess();
-								break;
+//				case kCloseProcess :
+//								OnCloseProcess();
+//								break;
 // --- Finder
 
 		case 1 :

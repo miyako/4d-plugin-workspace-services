@@ -5,92 +5,92 @@
         {
             "theme": "Finder",
             "syntax": "FINDER Perform operation(&T;&T;&Y;&L):L",
-            "threadSafe": false
+            "threadSafe": true
         },
         {
             "theme": "Finder",
             "syntax": "FINDER Get icon for file type(&T;&L):P",
-            "threadSafe": false
+            "threadSafe": true
         },
         {
             "theme": "Application",
             "syntax": "APPLICATION Get path(&T;&L):T",
-            "threadSafe": false
+            "threadSafe": true
         },
         {
             "theme": "Application",
             "syntax": "APPLICATION Launch(&T;&L):L",
-            "threadSafe": false
+            "threadSafe": true
         },
         {
             "theme": "Application",
             "syntax": "APPLICATION Launch paths(&T;&L;&Y):L",
-            "threadSafe": false
+            "threadSafe": true
         },
         {
             "theme": "File",
             "syntax": "FILE Get localized name(&T):T",
-            "threadSafe": false
+            "threadSafe": true
         },
         {
             "theme": "File",
             "syntax": "FILE Open with application(&T;&T;&L):L",
-            "threadSafe": false
+            "threadSafe": true
         },
         {
             "theme": "File",
             "syntax": "FILE Get application name(&T):T",
-            "threadSafe": false
+            "threadSafe": true
         },
         {
             "theme": "File",
             "syntax": "FILE SET ICON(&T;&P)",
-            "threadSafe": false
+            "threadSafe": true
         },
         {
             "theme": "File",
             "syntax": "FILE Get icon(&T):P",
-            "threadSafe": false
+            "threadSafe": true
         },
         {
             "theme": "Dock",
             "syntax": "DOCK SET BADGE LABEL(&T)",
-            "threadSafe": false
+            "threadSafe": true
         },
         {
             "theme": "Dock",
             "syntax": "DOCK Get icon:P",
-            "threadSafe": false
+            "threadSafe": true
         },
         {
             "theme": "Dock",
             "syntax": "DOCK Get badge label:T",
-            "threadSafe": false
+            "threadSafe": true
         },
         {
             "theme": "Dock",
             "syntax": "DOCK SET ICON(&P)",
-            "threadSafe": false
+            "threadSafe": true
         },
         {
             "theme": "Full Screen (QuickTime)",
-            "syntax": "FULL SCREEN BEGIN(&L;&L;&L)",
-            "threadSafe": false
+            "syntax": "_o_FULL SCREEN BEGIN(&L;&L;&L)",
+            "threadSafe": true
         },
         {
             "theme": "Full Screen (QuickTime)",
-            "syntax": "FULL SCREEN END",
-            "threadSafe": false
+            "syntax": "_o_FULL SCREEN END",
+            "threadSafe": true
         },
         {
             "theme": "Folder",
             "syntax": "FOLDER GET CONTENTS(&T;&Y;&L)",
-            "threadSafe": false
+            "threadSafe": true
         },
         {
             "theme": "Folder",
             "syntax": "FOLDER GET SUBPATHS(&T;&Y;&L)",
-            "threadSafe": false
+            "threadSafe": true
         }
     ]
 }
