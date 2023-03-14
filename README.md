@@ -1,9 +1,7 @@
-![version](https://img.shields.io/badge/version-16%2B-8331AE)
+![version](https://img.shields.io/badge/version-19%2B-5682DF)
 ![platform](https://img.shields.io/static/v1?label=platform&message=mac-intel%20|%20mac-arm&color=blue)
 [![license](https://img.shields.io/github/license/miyako/4d-plugin-workspace-services)](LICENSE)
 ![downloads](https://img.shields.io/github/downloads/miyako/4d-plugin-workspace-services/total)
-
-**Note**: for v17 and earlier, move `manifest.json` to `Contents`
 
 4d-plugin-workspace-services
 ============================
@@ -12,7 +10,7 @@ Collection of OS X native file manager commands.
 
 ## Syntax
 
-```
+```4d
 result:=FINDER Perform operation (srcPath;dstPath;objects;operation)
 ```
 
@@ -41,7 +39,7 @@ Operation Recycle 8
 Operation Duplicate 9
 ```
 
-```
+```4d
 icon:=FINDER Get icon for file type (typeId;fileType)
 ```
 
@@ -59,14 +57,14 @@ File Extension 2
 File MIME Type 3
 ```
 
-```
+```4d
 FULL SCREEN BEGIN (width;height;flags)
 FULL SCREEN END
 ```
 
 **deprecated** [QuickTime](https://developer.apple.com/library/content/documentation/QuickTime/QT6_3/Chap1/QT6WhatsNew.html) 32-bit only
 
-```
+```4d
 result:=APPLICATION Get path (appId;pathStyle)
 ```
 
@@ -86,7 +84,7 @@ Path Style URL 2
 
 returns the absolute or full path for the specified application, in the requested format
 
-```
+```4d
 success:=APPLICATION Launch (appId;options)
 ```
 
@@ -121,7 +119,7 @@ Launch And Hide 1048576
 Launch And Hide Others 2097152
 ```
 
-```
+```4d
 label:=DOCK Get badge label
 DOCK SET BADGE LABEL (label)
 ```
@@ -130,7 +128,7 @@ Parameter|Type|Description
 ------------|------------|----
 label|TEXT|
 
-```
+```4d
 icon:=DOCK Get icon
 DOCK SET ICON (icon)
 ```
@@ -141,7 +139,7 @@ icon|PICTURE|
 
 setting an empty picture resets the dock icon
 
-```
+```4d
 icon:=FILE Get icon (path)
 FILE SET ICON (path;icon)
 ```
@@ -151,7 +149,7 @@ Parameter|Type|Description
 path|TEXT|
 icon|PICTURE|
 
-```
+```4d
 result:=FILE Get application name (path)
 ```
 
@@ -162,7 +160,7 @@ appName|TEXT|
 
 [getInfoForFile:application:type:](https://developer.apple.com/documentation/appkit/nsworkspace/1535102-getinfoforfile?language=objc)
 
-```
+```4d
 name:=FILE Get localized name (path)
 ```
 
@@ -173,7 +171,7 @@ name|TEXT|
 
 [displayNameAtPath:](https://developer.apple.com/documentation/foundation/nsfilemanager/1409751-displaynameatpath)
 
-```
+```4d
 success:=FILE Open with application (path;appId;deactivate)
 ```
 
@@ -186,7 +184,7 @@ success|LONGINT|
 
 [openFile:withApplication:andDeactivate:](https://developer.apple.com/documentation/appkit/nsworkspace/1530182-openfile?language=objc)
 
-```
+```4d
 FOLDER GET CONTENTS (path;paths;pathType)
 FOLDER GET SUBPATHS (path;paths;pathType)
 ```
