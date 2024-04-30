@@ -603,24 +603,28 @@ void DOCK_Get_badge_label(sLONG_PTR *pResult, PackagePtr pParams)
 void DOCK_SET_ICON(sLONG_PTR *pResult, PackagePtr pParams)
 {
 	PA_Picture p = *(PA_Picture *)(pParams[0]);
-	CGImageRef cgImage = (CGImageRef)PA_CreateNativePictureForScreen(p);
-	NSImage *iconImage = [[NSImage alloc]initWithCGImage:cgImage size:NSZeroSize];
-	
-	if(iconImage)
-	{
-		if((iconImage.size.width) && (iconImage.size.height))
-		{
-			[[NSApplication sharedApplication]setApplicationIconImage:iconImage];
-		}else
-		{
-			[[NSApplication sharedApplication]setApplicationIconImage:nil];
-		}
-		[iconImage release];
-	}else
-	{
-		[[NSApplication sharedApplication]setApplicationIconImage:nil];
-	}
-	CFRelease(cgImage);
+    if(p) {
+        CGImageRef cgImage = (CGImageRef)PA_CreateNativePictureForScreen(p);
+        if(cgImage) {
+            NSImage *iconImage = [[NSImage alloc]initWithCGImage:cgImage size:NSZeroSize];
+            
+            if(iconImage)
+            {
+                if((iconImage.size.width) && (iconImage.size.height))
+                {
+                    [[NSApplication sharedApplication]setApplicationIconImage:iconImage];
+                }else
+                {
+                    [[NSApplication sharedApplication]setApplicationIconImage:nil];
+                }
+                [iconImage release];
+            }else
+            {
+                [[NSApplication sharedApplication]setApplicationIconImage:nil];
+            }
+            CFRelease(cgImage);
+        }
+    }
 }
 
 // ---------------------------- Full Screen (QuickTime) ---------------------------
