@@ -14,8 +14,8 @@
 	<string>BNDL</string>
 	<key>CFBundleSignature</key>
 	<string>4D06</string>
-	<key>CFBundleVersion</key>
-	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.4.2</string>
 	<key>CSResourcesFileMapped</key>
 	<true/>
 </dict>

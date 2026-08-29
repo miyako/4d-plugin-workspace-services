@@ -1,1 +1,4 @@
 Workspace Services/build/*
+build/*
+Workspace Services.4dbase/Project/DerivedData/*
+Workspace Services.4dbase/userPreferences.*

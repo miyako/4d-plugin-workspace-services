@@ -10,20 +10,12 @@
 #define __C_TEXT_H__ 1
 
 #include "4DPluginAPI.h"
-
-#if VERSIONMAC
-#import <CoreFoundation/CoreFoundation.h>
-#import <Cocoa/Cocoa.h>
-#import <AppKit/AppKit.h>
-#endif
+#include "C_TYPES.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-	typedef std::basic_string<PA_Unichar> CUTF16String;
-	typedef std::basic_string<uint8_t> CUTF8String;	
-	
 	class C_TEXT
 	{
 		
@@ -71,6 +63,15 @@ extern "C" {
 		
 		C_TEXT();
 		~C_TEXT();
+		
+		// _CUTF16String is a raw owned pointer with no reference counting.
+		// The compiler-generated copy ctor/assignment would copy that
+		// pointer shallowly, so two C_TEXT instances could end up both
+		// deleting it (double free) or one holding a dangling pointer
+		// after the other is destroyed. Disallow copying until the class
+		// is changed to hold the string by value instead of via `new`.
+		C_TEXT(const C_TEXT&) = delete;
+		C_TEXT& operator=(const C_TEXT&) = delete;
 		
 	};
 	

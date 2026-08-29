@@ -1,0 +1,61 @@
+{
+	"messages": [
+		{
+			"message": "Compatibility setting 'Save methods as Unicode' switched on.",
+			"severity": "warning"
+		},
+		{
+			"message": "Compatibility setting 'Fields are enterable in dialog boxes' switched on.",
+			"severity": "warning"
+		},
+		{
+			"message": "Compatibility setting 'Reload form for each record during PRINT SELECTION' switched off.",
+			"severity": "warning"
+		},
+		{
+			"message": "Compatibility setting 'Use period and comma as placeholders in numeric formats' switched on.",
+			"severity": "warning"
+		},
+		{
+			"message": "Compatibility setting 'Use object notation to access object properties' switched on.",
+			"severity": "warning"
+		},
+		{
+			"message": "Compatibility setting 'Use date type instead of ISO date format in objects' switched on.",
+			"severity": "warning"
+		},
+		{
+			"message": "Compatibility setting 'Web automatic variable assignment' switched off.",
+			"severity": "warning"
+		},
+		{
+			"message": "Compatibility setting for Remote 'Web automatic variable assignment' switched off.",
+			"severity": "warning"
+		},
+		{
+			"message": "Compatibility setting 'Execute QUERY BY FORMULA On Server' switched on.",
+			"severity": "warning"
+		},
+		{
+			"message": "Compatibility setting 'QUERY BY FORMULA Uses SQL Joins' switched on.",
+			"severity": "warning"
+		},
+		{
+			"message": "Compatibility setting 'Use LF for end of line on macOS' switched on.",
+			"severity": "warning"
+		},
+		{
+			"message": "Compatibility setting 'Don't add a BOM when writing a unicode text file by default' switched on.",
+			"severity": "warning"
+		},
+		{
+			"message": "Compatibility setting 'Use DirectWrite for text rendering in forms' switched on.",
+			"severity": "warning"
+		},
+		{
+			"message": "Compatibility setting 'Prefer null values than blank values' switched on.",
+			"severity": "warning"
+		}
+	],
+	"success": true
+}
