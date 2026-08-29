@@ -102,7 +102,7 @@ jobs:
       - name: verify universal binary
         run: |
           set -euo pipefail
-          BUNDLE_PATH="test/Plugins/${{ env.PRODUCT_NAME }}.bundle"
+          BUNDLE_PATH="${{ env.PRODUCT_NAME }}.4dbase/Plugins/Default/${{ env.PRODUCT_NAME }}.bundle"
           BIN="$BUNDLE_PATH/Contents/MacOS/${{ env.PRODUCT_NAME }}"
           lipo -info "$BIN"
           lipo -info "$BIN" | grep -q "arm64" && lipo -info "$BIN" | grep -q "x86_64"
