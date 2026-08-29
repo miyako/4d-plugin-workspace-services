@@ -61,9 +61,11 @@ NSString *_pathToHFS(NSString *posix)
 		NSURL *item = [[NSURL alloc]initFileURLWithPath:posix];
 		if(item){
 			NSString *hfs = (NSString *)CFURLCopyFileSystemPath((CFURLRef)item, kCFURLHFSPathStyle);
-			path = [hfs stringByAppendingString:@":"];
+			if(hfs){
+				path = [hfs stringByAppendingString:@":"];
+				[hfs release];
+			}
 			[item release];
-			[hfs release];
 		}
 	}
 	return path;
@@ -273,19 +275,24 @@ void FINDER_Get_icon_for_file_type(sLONG_PTR *pResult, PackagePtr pParams)
 	NSString *fileUTI = NULL;
 	NSImage *iconImage = NULL;
 	
+	*(PA_Picture*) pResult = NULL;
+	
 	switch (fileType) {
 		case FileTypeMIME:
-			fileUTI = (NSString *)UTTypeCopyPreferredTagWithClass(
-																														UTTypeCreatePreferredIdentifierForTag(
-																																																	kUTTagClassMIMEType,
-																																																	(CFStringRef)typeId,
-																																																	NULL),
-																														kUTTagClassFilenameExtension);
-			if(fileUTI){
-				iconImage = [[NSWorkspace sharedWorkspace]iconForFileType:fileUTI];
-				[fileUTI release];
+		{
+			CFStringRef mimeUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType,
+																																	 (CFStringRef)typeId,
+																																	 NULL);
+			if(mimeUTI){
+				fileUTI = (NSString *)UTTypeCopyPreferredTagWithClass((CFStringRef)mimeUTI, kUTTagClassFilenameExtension);
+				CFRelease(mimeUTI);
+				if(fileUTI){
+					iconImage = [[NSWorkspace sharedWorkspace]iconForFileType:fileUTI];
+					[fileUTI release];
+				}
 			}
 			break;
+		}
 			
 		case FileOSType:
 			fileUTI = NSFileTypeForHFSTypeCode(UTGetOSTypeFromString((CFStringRef)typeId));
@@ -310,16 +317,20 @@ void FINDER_Get_icon_for_file_type(sLONG_PTR *pResult, PackagePtr pParams)
 		//return picture without memory leak; avoid the use of - TIFFRepresentation
 		NSRect imageRect = NSMakeRect(0, 0, iconImage.size.width , iconImage.size.height);
 		CGImageRef image = [iconImage CGImageForProposedRect:(NSRect *)&imageRect context:NULL hints:NULL];
-		CFMutableDataRef data = CFDataCreateMutable(kCFAllocatorDefault, 0);
-		CGImageDestinationRef destination = CGImageDestinationCreateWithData(data, kUTTypeTIFF, 1, NULL);
-		CFMutableDictionaryRef properties = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, NULL, NULL);
-		CGImageDestinationAddImage(destination, image, properties);
-		CGImageDestinationFinalize(destination);
-		PA_Picture picture = PA_CreatePicture((void *)CFDataGetBytePtr(data), CFDataGetLength(data));
-		*(PA_Picture*) pResult = picture;
-		CFRelease(destination);
-		CFRelease(properties);
-		CFRelease(data);
+		if(image){
+			CFMutableDataRef data = CFDataCreateMutable(kCFAllocatorDefault, 0);
+			CGImageDestinationRef destination = CGImageDestinationCreateWithData(data, kUTTypeTIFF, 1, NULL);
+			if(destination){
+				CFMutableDictionaryRef properties = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, NULL, NULL);
+				CGImageDestinationAddImage(destination, image, properties);
+				CGImageDestinationFinalize(destination);
+				PA_Picture picture = PA_CreatePicture((void *)CFDataGetBytePtr(data), CFDataGetLength(data));
+				*(PA_Picture*) pResult = picture;
+				CFRelease(destination);
+				CFRelease(properties);
+			}
+			CFRelease(data);
+		}
 	}
 
 	[typeId release];
@@ -449,13 +460,12 @@ void FILE_Get_localized_name(sLONG_PTR *pResult, PackagePtr pParams)
 	Param1.fromParamAtIndex(pParams, 1);
     
     NSString *fullPath = Param1.copyPath();      
-    NSFileManager *defaultManager = [[NSFileManager alloc]init];	
+    NSFileManager *defaultManager = [NSFileManager defaultManager];
 	NSString *displayNameAtPath = [defaultManager displayNameAtPath:fullPath];
     
     returnValue.setUTF16String(displayNameAtPath);    
 	returnValue.setReturn(pResult);
     
-	[defaultManager release];	
 	[fullPath release];	    
 }
 
@@ -514,16 +524,19 @@ void FILE_SET_ICON(sLONG_PTR *pResult, PackagePtr pParams)
 
 	PA_Picture p = *(PA_Picture *)(pParams[1]);
 	CGImageRef cgImage = (CGImageRef)PA_CreateNativePictureForScreen(p);
-	NSImage *iconImage = [[NSImage alloc]initWithCGImage:cgImage size:NSZeroSize];
-	if(iconImage){
-		
-		NSString* fullPath = Param1.copyPath();
-		
-		[[NSWorkspace sharedWorkspace]setIcon:iconImage
-																	forFile:fullPath
-																	options:0];
-		[fullPath release];
-		[iconImage release];
+	if(cgImage){
+		NSImage *iconImage = [[NSImage alloc]initWithCGImage:cgImage size:NSZeroSize];
+		if(iconImage){
+			
+			NSString* fullPath = Param1.copyPath();
+			
+			[[NSWorkspace sharedWorkspace]setIcon:iconImage
+																		forFile:fullPath
+																		options:0];
+			[fullPath release];
+			[iconImage release];
+		}
+		CFRelease(cgImage);
 	}
 }
 
@@ -536,21 +549,27 @@ void FILE_Get_icon(sLONG_PTR *pResult, PackagePtr pParams)
 	NSString* fullPath = Param1.copyPath();	
 	NSImage *icon = [[NSWorkspace sharedWorkspace]iconForFile:fullPath];
 	
+	*(PA_Picture*) pResult = NULL;
+	
 	if (icon)
 	{
 		//return picture without memory leak; avoid the use of - TIFFRepresentation
 		NSRect imageRect = NSMakeRect(0, 0, icon.size.width , icon.size.height);
 		CGImageRef image = [icon CGImageForProposedRect:(NSRect *)&imageRect context:NULL hints:NULL];
-		CFMutableDataRef data = CFDataCreateMutable(kCFAllocatorDefault, 0);
-		CGImageDestinationRef destination = CGImageDestinationCreateWithData(data, kUTTypeTIFF, 1, NULL);
-		CFMutableDictionaryRef properties = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, NULL, NULL);
-		CGImageDestinationAddImage(destination, image, properties);
-		CGImageDestinationFinalize(destination);
-		PA_Picture picture = PA_CreatePicture((void *)CFDataGetBytePtr(data), CFDataGetLength(data));
-		*(PA_Picture*) pResult = picture;
-		CFRelease(destination);
-		CFRelease(properties);
-		CFRelease(data);
+		if(image){
+			CFMutableDataRef data = CFDataCreateMutable(kCFAllocatorDefault, 0);
+			CGImageDestinationRef destination = CGImageDestinationCreateWithData(data, kUTTypeTIFF, 1, NULL);
+			if(destination){
+				CFMutableDictionaryRef properties = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, NULL, NULL);
+				CGImageDestinationAddImage(destination, image, properties);
+				CGImageDestinationFinalize(destination);
+				PA_Picture picture = PA_CreatePicture((void *)CFDataGetBytePtr(data), CFDataGetLength(data));
+				*(PA_Picture*) pResult = picture;
+				CFRelease(destination);
+				CFRelease(properties);
+			}
+			CFRelease(data);
+		}
 	}
 	
 	[fullPath release];
@@ -572,21 +591,28 @@ void DOCK_SET_BADGE_LABEL(sLONG_PTR *pResult, PackagePtr pParams)
 void DOCK_Get_icon(sLONG_PTR *pResult, PackagePtr pParams)
 {
 	NSImage *icon = [[NSApplication sharedApplication] applicationIconImage];
+	
+	*(PA_Picture*) pResult = NULL;
+	
 	if (icon)
 	{
 		//return picture without memory leak; avoid the use of - TIFFRepresentation
 		NSRect imageRect = NSMakeRect(0, 0, icon.size.width , icon.size.height);
 		CGImageRef image = [icon CGImageForProposedRect:(NSRect *)&imageRect context:NULL hints:NULL];
-		CFMutableDataRef data = CFDataCreateMutable(kCFAllocatorDefault, 0);
-		CGImageDestinationRef destination = CGImageDestinationCreateWithData(data, kUTTypeTIFF, 1, NULL);
-		CFMutableDictionaryRef properties = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, NULL, NULL);
-		CGImageDestinationAddImage(destination, image, properties);
-		CGImageDestinationFinalize(destination);
-		PA_Picture picture = PA_CreatePicture((void *)CFDataGetBytePtr(data), CFDataGetLength(data));
-		*(PA_Picture*) pResult = picture;
-		CFRelease(destination);
-		CFRelease(properties);
-		CFRelease(data);
+		if(image){
+			CFMutableDataRef data = CFDataCreateMutable(kCFAllocatorDefault, 0);
+			CGImageDestinationRef destination = CGImageDestinationCreateWithData(data, kUTTypeTIFF, 1, NULL);
+			if(destination){
+				CFMutableDictionaryRef properties = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, NULL, NULL);
+				CGImageDestinationAddImage(destination, image, properties);
+				CGImageDestinationFinalize(destination);
+				PA_Picture picture = PA_CreatePicture((void *)CFDataGetBytePtr(data), CFDataGetLength(data));
+				*(PA_Picture*) pResult = picture;
+				CFRelease(destination);
+				CFRelease(properties);
+			}
+			CFRelease(data);
+		}
 	}
 }
 
@@ -679,7 +705,7 @@ void FOLDER_GET_CONTENTS(sLONG_PTR *pResult, PackagePtr pParams)
 	
 	Param3.fromParamAtIndex(pParams, 3);
     
-    NSFileManager *defaultManager = [[NSFileManager alloc]init];
+    NSFileManager *defaultManager = [NSFileManager defaultManager];
     NSArray *subpaths = [defaultManager contentsOfDirectoryAtPath:fullPath error:NULL];	
     
 	unsigned int pathType = Param3.getIntValue();    
@@ -701,7 +727,6 @@ void FOLDER_GET_CONTENTS(sLONG_PTR *pResult, PackagePtr pParams)
     
 	Param2.toParamAtIndex(pParams, 2);
     
-    [defaultManager release];
     [fullPath release];    
 }
 
@@ -722,7 +747,7 @@ void FOLDER_GET_SUBPATHS(sLONG_PTR *pResult, PackagePtr pParams)
 	
 	Param3.fromParamAtIndex(pParams, 3);
     
-    NSFileManager *defaultManager = [[NSFileManager alloc]init];
+    NSFileManager *defaultManager = [NSFileManager defaultManager];
     NSArray *subpaths = [defaultManager subpathsOfDirectoryAtPath:fullPath error:NULL];	
     
 	unsigned int pathType = Param3.getIntValue();    
@@ -744,6 +769,5 @@ void FOLDER_GET_SUBPATHS(sLONG_PTR *pResult, PackagePtr pParams)
     
 	Param2.toParamAtIndex(pParams, 2);
     
-    [defaultManager release];
     [fullPath release]; 
 }
