@@ -9,6 +9,123 @@ Workspace Services is a collection of macOS-only commands that wrap `NSWorkspace
 
 **Platforms:** macOS only (Intel and Apple Silicon). There is no Windows implementation and no Linux runtime for 4D plugins.
 
+## Manual versioning and publication
+
+Actions has exactly two independent manual entries, using GitHub's built-in
+ref selector:
+
+- **Bump**: select a branch and the required `mode` choice (`patch`, `minor`,
+  or `major`, default `patch`). This changes source metadata in one nonempty,
+  single-parent commit with the Copilot co-author trailer. It creates no tag,
+  release, build, or dispatch. Run **Build** separately afterward.
+- **Build**: select the desired branch or tag; there are no custom inputs.
+  The immutable selected `github.sha`, not a later branch tip, is built.
+  Publication is serialized across all refs, without cancelling another run.
+  There is no default-branch-only restriction.
+
+Neither workflow runs on a branch push, pull request, or tag push. A Bump
+requires a clean checkout at the exact selected SHA and the remote branch
+still at that SHA. The executable `.github/scripts/bump-hooks/pre-push` is
+mandatory both before editing and immediately before pushing. Its actual
+advertisement must contain exactly one update with the expected old SHA/ref,
+literal new SHA (or `HEAD`), and direct parent. A same-result race with zero
+updates is rejected. Pushes are nonforce and use both
+`push.followTags=false` and `--no-follow-tags`, even if annotated tags exist.
+
+### Source authority and preservation
+
+Version authority follows the committed Bump header's coordinated
+`MARKETING_VERSION` / `CURRENT_PROJECT_VERSION` / plist contract, not its
+older marketing-first implementation. The source project, `Info.plist`,
+and the actually copied `English.lproj/InfoPlist.strings` are validated
+together before any write. `CFBundleShortVersionString` is required;
+`CFBundleVersion` is optional and its absence stays absent. Known
+`$(...)` / `${...}` build-setting references are resolved and retained.
+Malformed, unresolved, cyclic, duplicate, inconsistent, or noncanonical
+versions fail closed. Release versions are canonical `X.Y.Z`, with no
+leading zeroes, suffixes, or tag text in source values.
+
+Bumps replace version tokens only, preserving encoding, BOM, UTF-16
+endianness, individual line endings, modes, references, and unrelated bytes.
+Prebuilt/destination localization is not source and is never bumped.
+The migration does not increment the release version or regenerate native
+projects, dependencies, schemas, 4D content, or prebuilt bundles.
+
+The workflow was introduced at
+`e35b968f6d8392f6f3b9f964ccfdb37aa653c611` with that explicit coordinated
+header; rename-follow history also covers the former `Workspace Services/`
+source paths. At intake `44a5101cf089f3eb6f63f3b77a93486a8169f164`,
+all six marketing settings and the source plist short version were already
+`1.4.7`, but all six current settings and the copied source localization
+still said `1.4.2`. The only intake repair brings those six current settings
+and two localization version spans to the existing `1.4.7`. The plist's
+absent build key remains absent. All six version assignments in each
+coordinated project setting are validated; the localization's PBX resource entry is
+`8D01CCCA0486CAD60068D4B7`. Destination/prebuilt strings remain untouched.
+
+### Native Build and create-only publication
+
+The original executable topology is macOS-only, despite the old workflow's
+Windows comments and the checked-in Windows project/binary. Build retains
+the native target, `Default` configuration, `arm64 x86_64` architecture
+request, deployment override, frameworks, resources, dependencies, signing
+secret names, strict signature verification, ZIP/DMG outputs, notarization,
+and stapling. No Windows job is invented. Only generated executable,
+plist, copied localization, signature, and target intermediates are cleaned;
+bundle resources, Windows files, dependencies, and sibling products remain.
+Fresh built plist and localization must match the selected source.
+Architecture verification requires the exact `arm64` and `x86_64` tokens,
+without inventing a restriction against additional slices.
+Both notary submissions must exit successfully and report JSON
+`Accepted` before stapling.
+
+The project otherwise appends `Default` to its products directory. Build
+therefore sets `CONFIGURATION_BUILD_DIR` explicitly to the repository's
+`Workspace Services.4dbase/Plugins` directory and verifies that canonical
+bundle, preserving its existing sibling resources rather than packaging
+a stale checked-in executable or selecting an arbitrary recursive match.
+
+Before native work, authenticated, fully paginated release discovery
+(including drafts) and exact remote-tag discovery must prove the intended
+version is unused. Authentication, network, malformed-response, or later-page
+errors are failures, not absence. The same check is repeated after all
+native/signing/notary/staple gates. Early preflight requires global
+cleanliness; final check/publication instead requires unchanged HEAD,
+source and configuration, while allowing legitimately changed tracked
+generated executable/plist/localization/signature outputs. Outputs are
+never reset to manufacture a clean tree.
+
+Publication creates a new tag at the selected SHA through a separate
+create-only API request, verifies the remote SHA, creates a **new public,
+nonprerelease release**, then uploads only
+`Workspace Services-X.Y.Z.zip` and `Workspace Services-X.Y.Z.dmg` to that
+new release ID. The original notes policy is preserved explicitly:
+empty body, generated release notes disabled. Existing tags/releases are
+never reused or modified. A concurrent creation fails rather than falling
+back to an update.
+
+### Manual recovery
+
+There is deliberately no rollback, automatic retry, deletion, PATCH,
+asset replacement, or clobbering. A failure after tag creation retains the
+tag; a failure after release creation retains that release and any already
+uploaded assets. Inspect the logged SHA, tag, release ID, API error, and
+uploaded asset list. Decide manually whether to complete or remove that
+partial state under the repository's release policy; do not blindly rerun
+Build expecting it to reuse existing state. A normal new publication
+requires a new source version selected through Bump.
+
+### Offline verification
+
+Run `actionlint .github/workflows/*.yml` and
+`PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s .github/tests -v`.
+The suite uses disposable Git repositories, fake GitHub APIs and extracted
+native Bash with closed-PATH native stubs; it does not build, sign,
+notarize, run 4D, dispatch Actions, or mutate production tags/releases.
+Migration verification repeats both full commands after a genuine guarded
+helper bump in a disposable checkout/local bare remote cloned from the
+exact final migration commit, rather than rewriting a fixture by hand.
+
 ---
 
 ## Summary table
