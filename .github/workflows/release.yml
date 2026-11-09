@@ -1,22 +1,13 @@
-# Builds the plugin for Windows (x64) first, then macOS as a universal
-# (arm64 + x86_64) binary, merges both into the single cross-platform
-# .bundle, codesigns + notarizes the mac binary, and publishes a GitHub
-# Release with the zip and dmg attached.
+# Builds the macOS universal plugin, preserving committed bundle resources
+# and legacy Windows binaries, then signs, notarizes and publishes zip/dmg.
 #
-# Trigger: push a tag matching v*.*.* (either by hand, or via bump-version.yml).
-# You can also run it manually against an existing tag with workflow_dispatch.
+# Run manually on the selected immutable source commit. Source metadata
+# determines the version; Bump version does not trigger this workflow.
 
-name: Build & Release
+name: Build
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
   workflow_dispatch:
-    inputs:
-      tag:
-        description: Existing tag to build (e.g. v2.3.0)
-        required: true
 
 permissions:
   contents: write
@@ -30,7 +21,7 @@ env:
   # --------------------------------------------------------------
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: release-publication
   cancel-in-progress: false
 
 jobs:
@@ -41,11 +32,17 @@ jobs:
       tag: ${{ steps.set.outputs.tag }}
       version: ${{ steps.set.outputs.version }}
     steps:
-      - id: set
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - name: validate source and publication availability
+        id: set
+        env:
+          SELECTED_SHA: ${{ github.sha }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          TAG="${{ inputs.tag || github.ref_name }}"
-          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
-          echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
+          set -euo pipefail
+          python3 .github/scripts/release.py preflight --sha "$SELECTED_SHA"
 
   build-macos:
     name: Build macOS, package, sign, notarize & release
@@ -54,7 +51,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ needs.version.outputs.tag }}
+          ref: ${{ github.sha }}
 
       - name: import Developer ID certificate
         env:
@@ -91,12 +88,26 @@ jobs:
 
       - name: build macOS plugin (universal)
         run: |
+          set -euo pipefail
+          PRODUCT="${{ env.PRODUCT_NAME }}"
+          PLUGINS_DIR="${PRODUCT}.4dbase/Plugins"
+          BUNDLE_PATH="${PLUGINS_DIR}/${PRODUCT}.bundle"
+          # Default has no CONFIGURATION_BUILD_DIR in the project and would
+          # otherwise build in Plugins/Default, not the committed bundle.
+          # Invalidate generated files only; keep dependencies and resources.
+          rm -f "${BUNDLE_PATH:?}/Contents/MacOS/${PRODUCT:?}"
+          rm -f "${BUNDLE_PATH:?}/Contents/Info.plist"
+          rm -f "${BUNDLE_PATH:?}/Contents/Resources/English.lproj/InfoPlist.strings"
+          rm -rf "${BUNDLE_PATH:?}/Contents/_CodeSignature"
+          rm -rf "${PLUGINS_DIR:?}/${PRODUCT:?}.build"
           xcodebuild -project "${{ env.XCODE_PROJECT }}" \
             -target "${{ env.PRODUCT_NAME }}" \
             -configuration Default \
             ARCHS="arm64 x86_64" \
             ONLY_ACTIVE_ARCH=NO \
             MACOSX_DEPLOYMENT_TARGET="${{ env.MACOS_DEPLOYMENT_TARGET }}" \
+            CODE_SIGNING_ALLOWED=NO \
+            CONFIGURATION_BUILD_DIR="$PWD/$PLUGINS_DIR" \
             build
 
       - name: verify universal binary
@@ -104,8 +115,15 @@ jobs:
           set -euo pipefail
           BUNDLE_PATH="${{ env.PRODUCT_NAME }}.4dbase/Plugins/${{ env.PRODUCT_NAME }}.bundle"
           BIN="$BUNDLE_PATH/Contents/MacOS/${{ env.PRODUCT_NAME }}"
-          lipo -info "$BIN"
-          lipo -info "$BIN" | grep -q "arm64" && lipo -info "$BIN" | grep -q "x86_64"
+          if [ ! -s "$BIN" ]; then
+            echo "::error::Expected freshly built binary not found at $BIN"
+            exit 1
+          fi
+          ARCH_INFO=$(lipo -archs "$BIN")
+          echo "$ARCH_INFO"
+          grep -Eq '(^|[[:space:]])arm64([[:space:]]|$)' <<< "$ARCH_INFO"
+          grep -Eq '(^|[[:space:]])x86_64([[:space:]]|$)' <<< "$ARCH_INFO"
+          python3 .github/scripts/source_version.py --verify-bundle "$BUNDLE_PATH"
           echo "BUNDLE_PATH=$BUNDLE_PATH" >> "$GITHUB_ENV"
 
       - name: codesign
@@ -113,6 +131,7 @@ jobs:
           set -euo pipefail
           IDENTITY=$(security find-identity -v -p codesigning "$KEYCHAIN_PATH" \
             | grep "Developer ID Application" | head -1 | sed -E 's/.*"(.*)".*/\1/')
+          test -n "$IDENTITY"
           echo "Signing with: $IDENTITY"
           codesign --verbose --deep --timestamp --force --options=runtime \
             --sign "$IDENTITY" "$BUNDLE_PATH"
@@ -125,24 +144,34 @@ jobs:
           ZIP_PATH="${{ env.PRODUCT_NAME }}-${VERSION}.zip"
           DMG_PATH="${{ env.PRODUCT_NAME }}-${VERSION}.dmg"
 
-          # zip: cross-platform bundle (win + mac binaries together), what most users grab
           ditto -c -k --keepParent "$BUNDLE_PATH" "$ZIP_PATH"
 
           # dmg: mac-friendly, and the only format Apple lets us staple a ticket to
           hdiutil create -format UDBZ -volname "${{ env.PRODUCT_NAME }}" -srcfolder "$BUNDLE_PATH" "$DMG_PATH"
 
-          xcrun notarytool submit "$ZIP_PATH" --keychain-profile "notarytool-profile" --keychain "$KEYCHAIN_PATH" --wait
-          xcrun notarytool submit "$DMG_PATH" --keychain-profile "notarytool-profile" --keychain "$KEYCHAIN_PATH" --wait
+          # A zero exit status alone does not mean Apple accepted the archive.
+          notarize() {
+            local OUT STATUS
+            OUT=$(xcrun notarytool submit "$1" --keychain-profile "notarytool-profile" \
+              --keychain "$KEYCHAIN_PATH" --wait --output-format json) || return 1
+            echo "$OUT"
+            STATUS=$(printf '%s' "$OUT" | python3 -c 'import json,sys; print(json.load(sys.stdin)["status"])') || return 1
+            if [ "$STATUS" != "Accepted" ]; then
+              echo "::error::Notarization of $1 returned '$STATUS'"
+              return 1
+            fi
+          }
+          notarize "$ZIP_PATH"
+          notarize "$DMG_PATH"
           xcrun stapler staple "$DMG_PATH"
 
           echo "ZIP_PATH=$ZIP_PATH" >> "$GITHUB_ENV"
           echo "DMG_PATH=$DMG_PATH" >> "$GITHUB_ENV"
 
       - name: create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ needs.version.outputs.tag }}
-          name: ${{ needs.version.outputs.tag }}
-          files: |
-            ${{ env.ZIP_PATH }}
-            ${{ env.DMG_PATH }}
+        env:
+          SELECTED_SHA: ${{ github.sha }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/release.py publish --sha "$SELECTED_SHA" "$ZIP_PATH" "$DMG_PATH"
