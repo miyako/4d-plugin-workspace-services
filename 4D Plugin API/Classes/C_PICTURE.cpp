@@ -13,6 +13,14 @@
 #define CMU_CREATE_THUMBNAIL 679
 #define CMU_CONVERT_PICTURE 1002
 
+static void ExecutePictureCommand(PA_long32 command, PA_Variable *args, short count)
+{
+	PA_Variable result = PA_ExecuteCommandByID(command, args, count);
+	PA_ErrorCode error = PA_GetLastError();
+	if(error == eER_NoErr)
+		PA_ClearVariable(&result);
+}
+
 unsigned int CPicture::_GetCount()
 {
 	uint32_t i;
@@ -120,33 +128,30 @@ void CPicture::fromFileAtPath(CUTF8String *pFilePath)
 	C_TEXT filePath;
 	filePath.setUTF8String(pFilePath);
 	
-	PA_Unistring _path = PA_CreateUnistring((PA_Unichar *)filePath.getUTF16StringPtr());
-	
 	PA_Variable args[2];
 	args[0] = PA_CreateVariable(eVK_Unistring);
-	PA_SetStringVariable(&args[0], &_path);
+	PA_SetUnistring(&args[0].uValue.fString, (PA_Unichar *)filePath.getUTF16StringPtr());
 	args[1] = PA_CreateVariable(eVK_Picture);
 	
-	PA_ExecuteCommandByID(678, args, 2);
+	ExecutePictureCommand(678, args, 2);
 	
 	PA_Picture p = PA_GetPictureVariable(args[1]);
 	
-	PA_DisposeUnistring(&_path);
-	
-	PA_ClearVariable(&args[0]);
-	
 	setPicture(p);
 	
-//	PA_ClearVariable(&args[1]);	
-//	belongs to 4D? should not release
+	PA_ClearVariable(&args[0]);
+	PA_ClearVariable(&args[1]);
 	
 }
 
 void CPicture::setBytes(const uint8_t *bytes, uint32_t len)
 {
 	PA_Picture p = PA_CreatePicture((void *)bytes, len);
-	
-	setPicture(p);	
+	PA_ErrorCode error = PA_GetLastError();
+	if(error != eER_NoErr)
+		return;
+	setPicture(p);
+	PA_DisposePicture(p);
 }
 
 const uint8_t *CPicture::getBytesPtr(CUTF8String *pType)
@@ -246,21 +251,19 @@ PA_Picture CPicture::createCopy(const char* type)
                                               size,
                                               eVTC_UTF_16
                                               );    
-    CUTF16String u16 = CUTF16String((const PA_Unichar *)&buf[0], len);	
-    
-    PA_Unistring u = PA_CreateUnistring((PA_Unichar*)u16.c_str());
+    CUTF16String u16 = CUTF16String((const PA_Unichar *)&buf[0], len / sizeof(PA_Unichar));
     
     PA_Picture p;
     
     p = PA_DuplicatePicture(this->_CPicture, 1);
     
     PA_Variable args[2];
-    args[0] = PA_CreateVariable(eVK_Picture);
+    args[0] = PA_CreateVariable(eVK_Undefined);
     PA_SetPictureVariable(&args[0], p);
     args[1] = PA_CreateVariable(eVK_Unistring);
     
-    PA_SetStringVariable(&args[1], &u);
-    PA_ExecuteCommandByID(CMU_CONVERT_PICTURE, args, 2);
+    PA_SetUnistring(&args[1].uValue.fString, (PA_Unichar *)u16.c_str());
+    ExecutePictureCommand(CMU_CONVERT_PICTURE, args, 2);
     
     p = PA_GetPictureVariable(args[0]);
     
@@ -280,13 +283,13 @@ PA_Picture CPicture::createGrayScale()
 	
 	PA_Variable args[2];
 	
-	args[0] = PA_CreateVariable(eVK_Picture);
+	args[0] = PA_CreateVariable(eVK_Undefined);
 	args[1] = PA_CreateVariable(eVK_Longint);
 	
 	PA_SetPictureVariable(&args[0], p);	
 	PA_SetLongintVariable(&args[1], 101);
 	
-	PA_ExecuteCommandByID(CMU_TRANSFORM_PICTURE, args, 2);
+	ExecutePictureCommand(CMU_TRANSFORM_PICTURE, args, 2);
 	
 	p = PA_GetPictureVariable(args[0]);
 
@@ -346,13 +349,13 @@ void CPicture::getSize(unsigned int *width, unsigned int *height)
 {
 	PA_Variable args[3];
 	
-	args[0] = PA_CreateVariable(eVK_Picture);
+	args[0] = PA_CreateVariable(eVK_Undefined);
 	args[1] = PA_CreateVariable(eVK_Longint);		
 	args[2] = PA_CreateVariable(eVK_Longint);	
 	
 	PA_SetPictureVariable(&args[0], this->_CPicture);
 	
-	PA_ExecuteCommandByID(CMU_PICTURE_PROPERTIES, args, 3);
+	ExecutePictureCommand(CMU_PICTURE_PROPERTIES, args, 3);
 	
 	PA_SetPictureVariable(&args[0], NULL);	
 	
@@ -369,7 +372,7 @@ PA_Picture CPicture::createThumbnail(unsigned int width, unsigned int height)
 	PA_Picture p;
 	PA_Variable args[4];
 	
-	args[0] = PA_CreateVariable(eVK_Picture);
+	args[0] = PA_CreateVariable(eVK_Undefined);
 	args[1] = PA_CreateVariable(eVK_Picture);	
 	args[2] = PA_CreateVariable(eVK_Longint);		
 	args[3] = PA_CreateVariable(eVK_Longint);	
@@ -378,7 +381,7 @@ PA_Picture CPicture::createThumbnail(unsigned int width, unsigned int height)
 	PA_SetLongintVariable(&args[2], width);
 	PA_SetLongintVariable(&args[3], height);	
 	
-	PA_ExecuteCommandByID(CMU_CREATE_THUMBNAIL, args, 4);
+	ExecutePictureCommand(CMU_CREATE_THUMBNAIL, args, 4);
 	
 	p = PA_GetPictureVariable(args[1]);
 	

@@ -39,6 +39,8 @@ public:
 	
 	ARRAY_INTEGER();
 	~ARRAY_INTEGER();
+	ARRAY_INTEGER(const ARRAY_INTEGER&) = delete;
+	ARRAY_INTEGER& operator=(const ARRAY_INTEGER&) = delete;
 
 };
 

@@ -39,6 +39,8 @@ public:
 	
 	ARRAY_TIME();
 	~ARRAY_TIME();
+	ARRAY_TIME(const ARRAY_TIME&) = delete;
+	ARRAY_TIME& operator=(const ARRAY_TIME&) = delete;
 
 };
 

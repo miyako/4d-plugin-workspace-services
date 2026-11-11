@@ -39,6 +39,8 @@ public:
 	
 	ARRAY_LONGINT();
 	~ARRAY_LONGINT();
+	ARRAY_LONGINT(const ARRAY_LONGINT&) = delete;
+	ARRAY_LONGINT& operator=(const ARRAY_LONGINT&) = delete;
 
 };
 

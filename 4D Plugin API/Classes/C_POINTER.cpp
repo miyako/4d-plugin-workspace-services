@@ -66,24 +66,11 @@ void C_POINTER::getPointerBlock(PointerBlock *pointerBlock)
 void C_POINTER::getVariable(PA_Variable *variable)
 {
 	
-	PA_Variable v;
-
 	switch (this->_ptrType)
 	{
 		case ePK_PointerToVariable:	
 			
-			v = PA_GetPointerValue(this->_ptr);
-			//should Call PA_ClearVariable to clear the returned PA_Variable.
-			//see 4DPluginAPI.h
-			variable->fType		= v.fType;
-			variable->fFiller	= 1;
-			variable->uValue.fVariableDefinition.fTag = v.uValue.fVariableDefinition.fTag;
-			variable->uValue.fVariableDefinition.fIndice = v.uValue.fVariableDefinition.fIndice;
-			variable->uValue.fVariableDefinition.fType = v.uValue.fVariableDefinition.fType;
-			
-			memcpy(variable->uValue.fVariableDefinition.fName,
-				   v.uValue.fVariableDefinition.fName,
-				   sizeof(v.uValue.fVariableDefinition.fName));
+			PA_SetVariableOrFieldReference(variable, this->_ptr);
 			
 			break;
 			
