@@ -87,6 +87,9 @@ class RepositoryContractTests(unittest.TestCase):
         ).splitlines()
         allowed = {*SOURCE_PATHS, "README.md", ".github/workflows/bump-version.yml",
                    ".github/workflows/release.yml"}
+        # Ownership fixes have their own immutable baseline preservation test.
+        from test_ownership import CHANGED_NATIVE
+        allowed.update(CHANGED_NATIVE)
         for path in paths:
             if path not in allowed:
                 with self.subTest(path=path):

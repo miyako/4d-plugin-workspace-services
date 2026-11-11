@@ -39,6 +39,8 @@ public:
 	
 	ARRAY_REAL();
 	~ARRAY_REAL();
+	ARRAY_REAL(const ARRAY_REAL&) = delete;
+	ARRAY_REAL& operator=(const ARRAY_REAL&) = delete;
 
 };
 

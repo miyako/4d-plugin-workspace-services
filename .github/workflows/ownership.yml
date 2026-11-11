@@ -1,0 +1,32 @@
+name: Native ownership
+
+on:
+  push:
+    branches: [miyako-workspace-services-ownership, master]
+    paths:
+      - '4D Plugin API/**'
+      - '4DPlugin.cpp'
+      - '4DPlugin.h'
+      - '.github/tests/ownership*'
+      - '.github/tests/test_ownership.py'
+      - '.github/tests/test_repository_contract.py'
+      - '.github/workflows/ownership.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  ownership:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Isolated synthetic ownership regressions
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python3 -m unittest discover -s .github/tests -p test_ownership.py -v
+      - name: Preservation contracts
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python3 -m unittest discover -s .github/tests -p test_repository_contract.py -v

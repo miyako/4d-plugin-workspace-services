@@ -11,6 +11,14 @@ Workspace Services is a collection of macOS-only commands that wrap `NSWorkspace
 
 ## Manual versioning and publication
 
+Native helper ownership is covered by an unsigned, in-memory
+[ownership audit and regression harness](.github/tests/ownership-audit.md).
+The separate `Native ownership` workflow runs on relevant audit-branch/master
+pushes; it does not build or publish the plugin. Compiled picture helpers now
+balance argument/creation owners and convert byte lengths to UTF-16 units;
+exclusive raw-pointer wrappers cannot be shallow-copied. These fixes do not
+reproduce a 4D host crash or certify SDK allocation-failure behavior.
+
 Actions has exactly two independent manual entries, using GitHub's built-in
 ref selector:
 
